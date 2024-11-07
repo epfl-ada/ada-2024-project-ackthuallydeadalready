@@ -1,0 +1,5 @@
+# Factors influencing voter behaviour in Wikipedia Request for Adminship Elections
+
+## Abstract
+
+The Wikipedia environment has many types of user accounts that have access to different functionalities to fulfill different roles. One of these roles is administrators, which have high and broad technical privileges such as deleting and protecting pages, blocking users and editing protected pages. The administrator status is obtained at the end of a process that starts with the person or another user submitting a Request For Adminship (RFA). The entire community then has about a week to cast a positive, negative or neutral vote accompanied by comments which fuel discussions around the vote. Finally, the final decision to promote or not is made by users called bureaucrats. In the age of algorithms, online anonymity and mass communication shenanigans, the different factors that can impact the discourse and voting behavior of large masses of individuals over short periods of time in a context of limited information about candidates become important to investigate.
