@@ -8,15 +8,27 @@ The Wikipedia environment has many types of user accounts that have access to di
 - How does the positivity/negativity dimension of the public sentiment about a user change over time during an election?
 - How does the positivity/negativity dimension of the public sentiment about returning candidates between elections?
 - What are the consequences for candidates of having a bias for writing negative comments?
-- What specific questions in the RFA voting form sway people
-- What are the most importance topics for most users
-- What are the important criteria for the voters
+- What specific questions in the RFA voting form sway people?
+- What are the most importance topics for most users?
+- What are the important criteria for the voters?
 
 ## Proposed Additional Dataset
 
-We would like to include in the data used all of the discussion walls pertaining to the RFA votes in order to have more datapoints to examine. Indeed, this would provide a more precise and nuanced point view of the sentiment that voters have about candidates. Using the candidate names, time of posting and usernames, we could merge the long form comments written by users into the original dataset in order to make it more complete. An important step to perform on the global datasets, at least for the analyses which are based on the content of the short and long form comments, is to remove the entries where people either did not comment or commented something such as '-' and nothing else.
+We would like to crossreference the original datatset with the questions and answers by candidates, this would provide context for comments on wich we would like to perform a sentiment analysis. Morever, this would allows us to study the reccurent themes and subject that leads to the general representation of candidates in voters opinion.
 
 ## Methods
 
 - Remove the "no comment" entries
-- 
+- scrape questions https://realpython.com/beautiful-soup-web-scraper-python/  
+- library : sentence transformers sentiment classification
+
+## Timeline
+
+
+
+## Organization
+
+
+
+## Questions for TAs
+
