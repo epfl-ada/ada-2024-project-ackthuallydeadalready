@@ -6,7 +6,7 @@ The Wikipedia environment has many types of user accounts that have access to di
 
 ## Research Questions
 - How does the positivity/negativity dimension of the public sentiment about a user change over time during an election?
-- How does the positivity/negativity dimension of the public sentiment about returning candidates between elections?
+- How does the positivity/negativity dimension of the public sentiment about returning candidates change between elections?
 - What are the consequences for candidates of having a bias for writing negative comments?
 - What specific questions in the RFA voting form sway people?
 - What are the most importance topics for most users?
@@ -14,7 +14,7 @@ The Wikipedia environment has many types of user accounts that have access to di
 
 ## Proposed Additional Dataset
 
-We would like to crossreference the original datatset with the questions and answers by candidates, this would provide context for comments on wich we would like to perform a sentiment analysis. Morever, this would allows us to study the reccurent themes and subject that leads to the general representation of candidates in voters opinion.
+We would like to cross-reference the original data set with the questions and answers by candidates, this would provide context for comments on which we would like to perform a sentiment analysis. Moreover, this would allows us to study the recurrent themes and subject that leads to the general representation of candidates in voters opinion. However it would require us to parse the webpages in order to acquire this data as it is not already pre aggregated.
 
 ## Methods
 
