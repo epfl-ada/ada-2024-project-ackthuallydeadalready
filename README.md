@@ -45,29 +45,29 @@ CART Decision Tree (linear & non-linear relationships, Medium interpretability)
 Logit Model (Linear relationship, Maximum interpretability) 
 
 # Timeline
-15.11 - Submitted Milestone P2 (START)
-29.11 - HW2 Due
-29.11 - Task 1: Scraping and preprocessing of all raw data finished
-subtasks: data-scraping, joining datasets, tokenization of comments, cleaning tokens' data (stopwords and punctuation)
-06.11 - Task 2: Exploratory Data Analysis finished
-subtasks: describe preliminary results and hypotheses with visual evidence and summary statistics
-10.12 - Task 3: Prediction Models finished
-subtasks: XGBoost, CART, Logit Model
-10.12 - Task 4: Creation of Github Webpage
-subtasks: template selection, graph inclusion, UX of website
-14.12 - Task 5: Cleaning code
-subtasks: cleaning code & ensuring execution
-16.12 - Task 6: Story building Finished
-subtasks: story telling, visualizing insights, chart curation
-20.12 - Submission Milestone P3 (END)
+- 15.11 - Submitted Milestone P2 (START)
+- 29.11 - HW2 Due
+- 29.11 - Task 1: Scraping and preprocessing of all raw data finished
+    - subtasks: data-scraping, joining datasets, tokenization of comments, cleaning tokens' data (stopwords and punctuation)
+- 06.11 - Task 2: Exploratory Data Analysis finished
+    - subtasks: describe preliminary results and hypotheses with visual evidence and summary statistics
+- 10.12 - Task 3: Prediction Models finished
+    - subtasks: XGBoost, CART, Logit Model
+- 10.12 - Task 4: Creation of Github Webpage
+    - subtasks: template selection, graph inclusion, UX of website
+- 14.12 - Task 5: Cleaning code
+    - subtasks: cleaning code & ensuring execution
+- 16.12 - Task 6: Story building Finished
+    - subtasks: story telling, visualizing insights, chart curation
+- 20.12 - Submission Milestone P3 (END)
 
 # Organization
-Task 1 - Aidan Maxence Reinatt
-Task 2 - Mikail Alexandre Reinatt
-Task 3 - Mikail Maxence Reinatt
-Task 4 - Aidan Alexandre
-Task 5 - Maxence Alexandre
-Task 6 - Mikail Aidan
+- Task 1 - Aidan Maxence Reinatt
+- Task 2 - Mikail Alexandre Reinatt
+- Task 3 - Mikail Maxence Reinatt
+- Task 4 - Aidan Alexandre
+- Task 5 - Maxence Alexandre
+- Task 6 - Mikail Aidan
 
 # Questions for TAs
 
