@@ -16,6 +16,7 @@ bs4
 certifi                     
 cffi                         
 charset-normalizer      
+collections
 comm                       
 contourpy                      
 cycler                       
@@ -70,7 +71,8 @@ nbclassic
 nbclient                     
 nbconvert                    
 nbformat                    
-nest-asyncio                 
+nest-asyncio 
+nltk                
 notebook                      
 notebook_shim                  
 numexpr                    
@@ -118,8 +120,10 @@ statsmodels
 terminado                
 tiktoken                      
 tinycss2                          
-tornado                          
-traitlets                         
+tornado 
+torch                         
+traitlets    
+transformers                     
 types-python-dateutil           
 typing_extensions              
 tzdata                           
