@@ -1,14 +1,16 @@
 # Abstract 
 
 <p align="justify">
-Wikipedia administrators are a special class of editors that possess extra capabilities such as blocking user accounts, editing protected pages, etc. They have a responsibility to use the tools sparingly and in the right cases, therefore requiring a high level of trust from the community. This is important because the request for adminship (RfA) is a social consensus building process, where editors aim to make sure of the quality of the admin. Bureaucrats evaluate the general consensus to make a decision, the votes being only indicative.  
-Our project aims to harness sentiment analysis on the comments to help extract and understand key topics that may strongly influence the outcome of an election and how users, admins and candidates interact around these contentious topics.  
+Wikipedia administrators are a special class of editors that possess extra capabilities such as blocking user accounts, editing protected pages, etc. They have a responsibility to use the tools sparingly and in the right cases, therefore requiring a high level of trust from the community. This is important because the request for adminship (RfA) is a social consensus building process, where editors aim to make sure of the quality of the admin. Bureaucrats evaluate the general consensus to make a decision, the votes being only indicative.<br />
+Our project aims to harness sentiment analysis on the comments to help extract and understand key topics that may strongly influence the outcome of an election and how users, admins and candidates interact around these contentious topics.  <br />
 This can help us understand consensus building process social dynamics and also in designing more effective consensus systems which address simple voting limitations.
 </p>
 
 # Proposed Additional Dataset
-We would like to cross-reference the original data set with the questions and answers by candidates, this would provide context for comments on which we would like to perform a sentiment analysis. Moreover, this would allow us to study the recurrent themes and subjects that lead to the general representation of candidates in voters opinion. It will require us to parse the webpages in order to acquire this data as it is not already pre aggregated.
-Wikipedia has its own API for web scraping so it is easy to gather the data. 
+<p align="justify">
+We would like to cross-reference the original data set with the questions and answers by candidates, this would provide context for comments on which we would like to perform a sentiment analysis. Moreover, this would allow us to study the recurrent themes and subjects that lead to the general representation of candidates in voters opinion. It will require us to parse the webpages in order to acquire this data as it is not already pre aggregated.<br />
+Wikipedia has its own API for web scraping so it is easy to gather the data. We will scrape it directly from the url of each successful or unsuccessful candidate. Then, we will cross check the username with the user’s election that we have in the RfA dataset. By doing this, we will get all the questions and answers for each user.
+</p>
 
 # Research Questions
 
@@ -16,13 +18,13 @@ Wikipedia has its own API for web scraping so it is easy to gather the data.
 For this we will use the additional dataset of questions to the candidate.
 We first find all the references to the questions in the comments. We then conduct a sentiment analysis of those comments and extract the ones with the strongest reactions(positive or negative) by using the polarity score or label probability. Next, out of those comments we extract the corresponding questions and their main topic. 
 2. **Which topics have swayed people’s opinion ?**  
-We will  find which voters have changed their minds (this is easy to do as the history is in the comments). For all of these voters, we will aim to extract what topic made them change their opinion by analyzing the key topics when they changed their votes. Do these topics correspond with the ones found using the questions and sentiment analysis in point 1)?
+We will  find which voters have changed their minds (this is easy to do as the history is in the comments). For all of these voters, we will aim to extract what topic made them change their opinion by using topic analysis when they changed their votes. Do these topics correspond with the ones found using the questions and sentiment analysis in point 1)?
 3. **Do certain questions correlate with higher engagement?**  
 Out of the topics in point 1), we find in each RFA whether they are overrepresented in the comments. This could help us find whether these topics are highly contentious.  
 4. **Are the most important topics more often associated with either positive or negative sentiments?or both?**  
 We will use topics found in point 1) and then find out if they are linked to strong sentiments in various RFAs. 
 5. **Which topics appear most frequently in the entire corpus?**  
-We then can find which topics are referenced the most. We will evaluate the whole dataset, divide it by each election and see whether there is a trend every year. Maybe some topics are important in the beginning of admin selection process and it began to die down over the years. 
+We then can find which topics are referenced the most. We will evaluate the whole dataset, divide it by each election and see whether there is a trend every year. Maybe some topics are important in the beginning of the admin selection process and it began to die down over the years.  
 6. **Do certain voters often talk about certain topics only?**  
 We will follow some highly engaged users and see if they often mention some of these contentious topics, or have a preference to mention some of these topics very often. In this case, do they tend to feel more positively or negatively (or both) towards them?This could help us to characterize voter habits.
 
