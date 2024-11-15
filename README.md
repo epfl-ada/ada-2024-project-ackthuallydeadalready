@@ -73,7 +73,7 @@ Logit Model (Linear relationship, Maximum interpretability)
 
 
 # Jupyter Notebook file:
-Results
+results.ipynb
 
 Data scraping sample
 Sentiment Analysis
