@@ -1,12 +1,6 @@
 import sys
 import src.Data.preprocessing as pre
 import matplotlib.pyplot as plt
-from collections import Counter
-from nltk.corpus import stopwords
-import nltk
-from transformers import AutoTokenizer, pipeline
-#from transformers import AutoModelForSequenceClassification #to use a longformer, not needed yet
-import torch
 
 def scrapping_res():
     all_names, answer_one = pre.scrape()
