@@ -1,4 +1,4 @@
-import src.Modules.plotting
+import src.utils.plotting
 from collections import Counter
 from nltk.corpus import stopwords
 import nltk

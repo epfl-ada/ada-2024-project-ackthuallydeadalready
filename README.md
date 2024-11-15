@@ -33,6 +33,7 @@ We will follow some highly engaged users and see if they often mention some of t
 
 1. **Auxiliary Data Collection**
     - Scrape RFA prompt questions using beautiful soup package to join with dataset
+    - Clean the questions and answers to a good format
 2. **Preprocessing:**
     - Data cleaning in preparation for tokenizing. Would mostly involve removing stop-words and punctuation
     - Grouping the data by election and year in preparation of sentiment analysis
@@ -84,9 +85,8 @@ With our semantic analysis, we will test prediction models for voting patterns g
 
 
 # Jupyter Notebook file:
-results.ipynb
-
-Data scraping sample
-Sentiment Analysis
-Visualization computing
-Plots
+results.ipynb contains:
+- Data scraping sample  
+- Plots  
+- Sentiment Analysis  
+- Visualization computing  

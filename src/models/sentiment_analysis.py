@@ -1,4 +1,4 @@
-import src.Modules.plotting
+import src.utils.plotting
 from transformers import pipeline
 #from transformers import AutoModelForSequenceClassification, AutoTokenizer # Respectively to use a longformer and totokenize,
 # not needed yet

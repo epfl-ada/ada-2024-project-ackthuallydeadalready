@@ -1,16 +1,7 @@
 import sys
-import src.Data.preprocessing as pre
+import src.utils.preprocessing as pre
 import matplotlib.pyplot as plt
 import numpy as np
-
-def scraping_res():
-    all_names, answer_one = pre.scrape()
-
-    for key, value in all_names["(aeropagitica)"].items():
-        print(key)
-        print(value)
-    
-    return None
 
 # Plots the number of votes per year between the years 2003 and 2013
 def plot_byYear(df):

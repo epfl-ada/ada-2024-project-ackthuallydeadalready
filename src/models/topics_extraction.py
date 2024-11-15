@@ -1,4 +1,4 @@
-import src.Data.preprocessing
+import src.utils.preprocessing
 from keybert import KeyBERT
 
 def example_input():
