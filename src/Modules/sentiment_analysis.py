@@ -16,7 +16,3 @@ def sa_hug(df,max=512): # Allows user to specify the max number of tokens
     df['sentiment'] = [result['label'] for result in results]
     df['confidence'] = [result['score'] for result in results]
     return df
-
-
-
-
