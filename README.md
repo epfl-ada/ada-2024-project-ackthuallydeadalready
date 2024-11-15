@@ -51,7 +51,7 @@ Using Latent Dirichlet Analysis (LDA), we can infer which topics are relevant fo
 7. **Feature Engineering:**  
 we will process the data to create new features to capture specific dynamics, i.e. negative commentstotal polar  comments to capture negative sentiment as a ratio of total polar comments. The goal will be to create relevant features for prediction models. 
 8. **Prediction Models:**  
-With our semantic analysis, we will test prediction models for voting patterns given the comment history. This prediction model will focus on sentiments and topics that have been learned. We believe for RfA system, it should perform better than other model since bureaucrats are the one deciding the final vote, not a simple voting system. We will try at least three models (below) for linear and non-linear relationships between features and use K-fold CV to tune hyperparameters. 
+With our semantic analysis, we will test prediction models for voting patterns given the comment history. This prediction model will focus on sentiments and topics that have been learned. We believe for the RfA system, it should perform better than other models since bureaucrats are the ones deciding the final vote, not a simple voting system. We will try at least three models (below) for linear and non-linear relationships between features and use K-fold CV to tune hyperparameters.  
     - Ensemble Methods: XGBoost (non-linear non-linear, Black Box)
     - CART Decision Tree (linear & non-linear relationships, Medium interpretability) 
     - Logit Model (Linear relationship, Maximum interpretability) 
@@ -88,5 +88,6 @@ With our semantic analysis, we will test prediction models for voting patterns g
 results.ipynb contains:
 - Data scraping sample  
 - Plots  
-- Sentiment Analysis  
+- Sentiment Analysis
+- Topic Analysis
 - Visualization computing  
