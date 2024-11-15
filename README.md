@@ -64,7 +64,7 @@ We would like to cross-reference the original data set with the questions and an
 
 - subtasks: cleaning code & ensuring execution
 
-16.12 - Task 5: Story building Finished
+16.12 - Task 6: Story building Finished
 
 - subtasks: story telling, visualizing insights, chart curation 
 
