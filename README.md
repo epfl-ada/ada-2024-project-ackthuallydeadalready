@@ -13,7 +13,7 @@ Wikipedia has its own API for web scraping so it is easy to gather the data. We 
 </p>
 
 # Research Questions
-
+ 
 1. **Which topics (e.g., policy stance, previous contributions, communication skills) provoke the most sentiment-laden comments?**  
 For this we will use the additional dataset of questions to the candidate.
 We first find all the references to the questions in the comments. We then conduct a sentiment analysis of those comments and extract the ones with the strongest reactions(positive or negative) by using the polarity score or label probability. Next, out of those comments we extract the corresponding questions and their main topic. 
