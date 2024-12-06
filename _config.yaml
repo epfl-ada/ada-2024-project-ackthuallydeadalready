@@ -1,0 +1,54 @@
+# Site Settings
+title: "Wikipedia RFA Data Story"
+description: "A deep dive into voting patterns and sentiment analysis in Wikipedia's Requests for Adminship."
+baseurl: ""  # The subpath of your site, e.g. /blog
+url: ""  # The base hostname & protocol for your site
+
+# Theme Configuration
+theme: "jekyll-theme-minimal"
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Markdown Extensions
+markdown: kramdown
+kramdown:
+  input: GFM
+
+# Navigation Links
+header_pages:
+  - index.md
+  - about.md
+  - contact.md
+
+# Layout Settings
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      author: "AkthuallyDeadAlready"
+
+# Custom Styling
+sass:
+  style: compressed
+
+# CSS Overrides
+custom_css:
+  - /assets/css/custom.css
+
+# Analytics (Optional)
+google_analytics: "UA-XXXXXXXXX-X"
+
+# Social Links
+social_links:
+  github: "https://github.com/epfl-ada/ada-2024-project-ackthuallydeadalready"
+  linkedin: "https://www.linkedin.com"
+  twitter: "https://twitter.com"
+  epfl: "https://epfl-ada.github.io/teaching/fall2024/cs401/"
+
+# Footer
+footer:
+  credits: "© 2024 Wikipedia RFA Insights. All rights reserved. Thanks to EPFL."

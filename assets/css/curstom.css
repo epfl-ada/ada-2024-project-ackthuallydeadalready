@@ -1,0 +1,96 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem 0;
+}
+
+h1, h2, h3 {
+    margin-bottom: 1rem;
+}
+
+p {
+    margin-bottom: 1.5rem;
+}
+
+/* Gradient Header */
+.header {
+    background: linear-gradient(to right, red, lightblue);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .project-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.header .logo-links img {
+    width: 40px;
+    height: auto;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.header .logo-links img:hover {
+    opacity: 0.8;
+}
+
+/* Alternating Sections */
+.intro-section {
+    background-color: #f0f8ff;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.data-visualization {
+    background-color: white;
+    padding: 2rem 0;
+}
+
+.insights-section {
+    background-color: #f0f8ff;
+    padding: 2rem 0;
+}
+
+.call-to-action {
+    background-color: white;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+/* Footer */
+.footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 1.5rem 1rem;
+}
+
+.footer ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.footer ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer ul li a:hover {
+    text-decoration: underline;
+}

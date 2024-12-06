@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/custom.css' | relative_url }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="project-name">AkthuallyDeadAlready</div>
+        <div class="logo-links">
+            <a href="https://epfl-ada.github.io/teaching/fall2024/cs401/" target="_blank">
+                <img src="/image/ada.png" alt="EPFL ADA">
+            </a>
+            <a href="https://github.com/epfl-ada/ada-2024-project-ackthuallydeadalready" target="_blank">
+                <img src="/image/ghub.png" alt="GitHub Repo">
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+        {{ content }}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Wikipedia RFA Insights. All rights reserved.</p>
+            <ul class="social-links">
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#">GitHub</a></li>
+            </ul>
+            <p>Thanks to EPFL</p>
+        </div>
+    </footer>
+</body>
+</html>
