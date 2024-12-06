@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wikipedia RFA Data Story</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem 0;
+        }
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+        }
+        p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Gradient Banner */
+        .hero-section {
+            background: linear-gradient(to right, red, lightblue);
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+        .cta-button {
+            background: white;
+            color: black;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cta-button:hover {
+            background: lightblue;
+            color: black;
+        }
+
+        /* Alternating Background Colors */
+        .intro-section {
+            background-color: #f0f8ff; /* Light blue */
+            text-align: center;
+        }
+        .data-visualization {
+            background-color: white;
+        }
+        .insights-section {
+            background-color: #f0f8ff; /* Light blue */
+        }
+        .call-to-action {
+            background-color: white;
+            text-align: center;
+        }
+
+        /* Insights Grid */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .insight-item {
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+        .footer ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        .footer ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .footer ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Floating Legend */
+        .legend {
+            position: fixed;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .legend a {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .legend a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Legend -->
+    <div class="legend">
+        <a href="#intro">Introduction</a>
+        <a href="#visualization">Visualizations</a>
+        <a href="#insights">Insights</a>
+        <a href="#cta">Get Involved</a>
+    </div>
+
+    <!-- Header Section -->
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1>Understanding Sentiment in Wikipedia RFA Elections</h1>
+            <p>A deep dive into voting patterns, community behavior, and sentiment trends shaping the Wikipedia admin landscape.</p>
+            <button class="cta-button">Explore Insights</button>
+        </div>
+    </header>
+
+    <!-- Introduction Section -->
+    <section class="intro-section" id="intro">
+        <div class="container">
+            <h2>The Story Behind Wikipedia RFA</h2>
+            <p>Requests for adminship (RFA) are pivotal in Wikipedia's governance. By analyzing votes and sentiments, we uncover fascinating patterns in community dynamics and decision-making processes.</p>
+        </div>
+    </section>
+
+    <!-- Data Visualization Section -->
+    <section class="data-visualization" id="visualization">
+        <div class="container">
+            <h2>Interactive Visualizations</h2>
+            <div class="chart-container">
+                <canvas id="sentimentChart"></canvas>
+            </div>
+            <p>Sentiment analysis reveals a spectrum of emotions influencing votes. Explore how positivity or negativity trends over time.</p>
+        </div>
+    </section>
+
+    <!-- Key Insights Section -->
+    <section class="insights-section" id="insights">
+        <div class="container">
+            <h2>Key Findings</h2>
+            <div class="insights-grid">
+                <div class="insight-item">
+                    <h3>Trend Analysis</h3>
+                    <p>Neutral sentiments dominate voting, with notable spikes in positive language during successful campaigns.</p>
+                </div>
+                <div class="insight-item">
+                    <h3>Community Dynamics</h3>
+                    <p>Voting patterns reflect social clustering, with frequent voters often aligned on sentiment intensity.</p>
+                </div>
+                <div class="insight-item">
+                    <h3>Predictive Modeling</h3>
+                    <p>Our models suggest comment quality and frequency are strong predictors of electoral outcomes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="call-to-action" id="cta">
+        <div class="container">
+            <h2>Get Involved</h2>
+            <p>Contribute to ongoing research and explore the dataset. Your insights could shape future findings.</p>
+            <button class="cta-button">Access the Dataset</button>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2024 Wikipedia RFA Insights. All rights reserved.</p>
+            <ul class="social-links">
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#">GitHub</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        // Chart.js Example
+        const ctx = document.getElementById('sentimentChart').getContext('2d');
+        const sentimentChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [{
+                    label: 'Sentiment Over Time',
+                    data: [3, 5, 2, 8, 7],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
