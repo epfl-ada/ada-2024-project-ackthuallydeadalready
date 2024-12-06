@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wikipedia RFA Data Story</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -28,27 +28,50 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Gradient Banner */
-        .hero-section {
+        /* Gradient Banner (Header) */
+        .header {
             background: linear-gradient(to right, red, lightblue);
             color: white;
-            text-align: center;
-            padding: 3rem 1rem;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .hero-content h1 {
-            font-size: 2.5rem;
+        .header .project-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
         }
-        .cta-button {
-            background: white;
-            color: black;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 5px;
+        .header .logo-links img {
+            width: 40px;
+            height: auto;
+            margin-left: 10px;
             cursor: pointer;
         }
-        .cta-button:hover {
-            background: lightblue;
-            color: black;
+        .header .logo-links img:hover {
+            opacity: 0.8;
+        }
+
+        /* Floating Legend */
+        .legend {
+            position: fixed;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .legend a {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .legend a:hover {
+            text-decoration: underline;
         }
 
         /* Alternating Background Colors */
@@ -87,14 +110,17 @@
             color: white;
             text-align: center;
             padding: 1.5rem 1rem;
+            margin-top: 2rem;
+        }
+        .footer p, .footer ul {
+            margin: 0;
+            padding: 0;
         }
         .footer ul {
             list-style: none;
-            padding: 0;
-        }
-        .footer ul li {
-            display: inline;
-            margin: 0 10px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
         }
         .footer ul li a {
             color: white;
@@ -103,32 +129,22 @@
         .footer ul li a:hover {
             text-decoration: underline;
         }
-
-        /* Floating Legend */
-        .legend {
-            position: fixed;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            background: #f8f8f8;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
-        .legend a {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #007BFF;
-            text-decoration: none;
-        }
-        .legend a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="project-name">AkthuallyDeadAlready</div>
+        <div class="logo-links">
+            <a href="https://epfl-ada.github.io/teaching/fall2024/cs401/" target="_blank">
+                <img src="/image/ada.png" alt="EPFL ADA">
+            </a>
+            <a href="https://github.com/epfl-ada/ada-2024-project-ackthuallydeadalready" target="_blank">
+                <img src="/image/ghub.png" alt="GitHub Repo">
+            </a>
+        </div>
+    </header>
+
     <!-- Floating Legend -->
     <div class="legend">
         <a href="#intro">Introduction</a>
@@ -137,20 +153,11 @@
         <a href="#cta">Get Involved</a>
     </div>
 
-    <!-- Header Section -->
-    <header class="hero-section">
-        <div class="hero-content">
-            <h1>Understanding Sentiment in Wikipedia RFA Elections</h1>
-            <p>A deep dive into voting patterns, community behavior, and sentiment trends shaping the Wikipedia admin landscape.</p>
-            <button class="cta-button">Explore Insights</button>
-        </div>
-    </header>
-
     <!-- Introduction Section -->
     <section class="intro-section" id="intro">
         <div class="container">
-            <h2>The Story Behind Wikipedia RFA</h2>
-            <p>Requests for adminship (RFA) are pivotal in Wikipedia's governance. By analyzing votes and sentiments, we uncover fascinating patterns in community dynamics and decision-making processes.</p>
+            <h1>Factors contributing to public sentiments on Wikipedia admins <br> and their consequences in RFA elections.</h1>
+            <p>A deep dive into voting patterns, community behavior, and sentiment trends shaping the Wikipedia admin landscape.</p>
         </div>
     </section>
 
@@ -204,6 +211,7 @@
                 <li><a href="#">LinkedIn</a></li>
                 <li><a href="#">GitHub</a></li>
             </ul>
+            <p>Thanks to EPFL</p>
         </div>
     </footer>
 
