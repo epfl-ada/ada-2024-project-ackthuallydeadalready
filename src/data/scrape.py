@@ -81,7 +81,7 @@ def scrape_by_name(names):
 
 def scrape_by_name_all_qs(names):
     all_names = {}
-    for name in names[:1]:
+    for name in names:
         all_names[name] = {}          
     for name in all_names:
         url = "https://en.wikipedia.org/w/api.php?action=parse&prop=text&page=Wikipedia:Requests_for_adminship/" + name + "&format=json"
@@ -102,16 +102,40 @@ def scrape_by_name_all_qs(names):
             else:
                 answer_i = question.getText()
             question_i = question_i.replace("\\n","").replace("\\",'')
-            if answer_i is not None:
-                answer_i = answer_i.replace("A: ","")
+            if answer_i != None and question_i != None:
+                #answer_i = answer_i.replace("A: ","")
                 all_names[name][f"Question {i}"] = {"Question": question_i, "Answer": answer_i}
+            elif answer_i == None:
+                all_names[name][f"Question {i}"] = {"Question": question_i, "Answer": "No answer found"}
+                print(name)
+                print(f"answer_i type: {type(answer_i)}")  # Check type
+                print(f"answer_i value: {answer_i}")  # Check value
+                
             i += 1
     return all_names
 
-def dict_to_csv(dict):
-    with open("data/questions_answers_test.csv", "w", newline="") as f:
+def dict_to_csv(data_dict, filename):
+    with open("data/"+filename, "w", newline="") as f:
         w = csv.writer(f, delimiter='$')
         w.writerow(['User', 'Questions', 'Answers'])
-        for key, value in dict.items():
-            for key2, value2 in value.items():
-                w.writerow([key, key2, value2])
+
+        for user, questions in data_dict.items():
+            for question, answer_dict in questions.items():
+                question_text = answer_dict.get('Question', '')
+                answer_text = answer_dict.get('Answer', '')
+                w.writerow([user, question_text, answer_text])
+
+def csv_to_dict_2(csv_file):
+    data_dict = {}
+    
+    with open(csv_file, newline="") as f:
+        reader = csv.reader(f, delimiter='$')
+        next(reader)  # Skip the header row
+        
+        for row in reader:
+            user, question, answer = row
+            if user not in data_dict:
+                data_dict[user] = {}
+            data_dict[user][question] = answer
+    
+    return data_dict
