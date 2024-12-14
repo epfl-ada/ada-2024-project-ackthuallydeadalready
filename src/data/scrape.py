@@ -157,18 +157,3 @@ def dict_to_csv(data_dict, filename):
                 question_text = answer_dict.get('Question', '')
                 answer_text = answer_dict.get('Answer', '')
                 w.writerow([user, question_text, answer_text])
-
-def csv_to_dict_2(csv_file):
-    data_dict = {}
-    
-    with open(csv_file, newline="") as f:
-        reader = csv.reader(f, delimiter='$')
-        next(reader)  # Skip the header row
-        
-        for row in reader:
-            user, question, answer = row
-            if user not in data_dict:
-                data_dict[user] = {}
-            data_dict[user][question] = answer
-    
-    return data_dict
