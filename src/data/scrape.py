@@ -94,25 +94,58 @@ def scrape_by_name_all_qs(names):
                 break
             question = question.next_sibling
             question_i = ""
-            while(question != None and question.name != "dl"):
-                question_i += question.getText()
+            while question and question.name not in ["dl", "dd", "b"]:
+                if question.string:
+                    question_i += question.get_text(strip=True)
                 question = question.next_sibling
-            if question == None:
-                answer_i = soup.find('b', string=(lambda text: text == f"{i}." or text == f"{i}")).parent.find_next_sibling('dl')
-            else:
-                answer_i = question.getText()
             question_i = question_i.replace("\\n","").replace("\\",'')
-            if answer_i != None and question_i != None:
-                #answer_i = answer_i.replace("A: ","")
-                all_names[name][f"Question {i}"] = {"Question": question_i, "Answer": answer_i}
-            elif answer_i == None:
-                all_names[name][f"Question {i}"] = {"Question": question_i, "Answer": "No answer found"}
+            answer_i = None
+            parent = soup.find('b', string=(lambda text: text == f"{i}." or text == f"{i}"))
+            if parent:
+                answer_i = parent.find_next('dl')           
+            if answer_i and question_i:
+                all_names[name][f"Question {i}"] = {
+                    "Question": question_i.strip(),
+                    "Answer": answer_i.get_text(strip=True)
+                }
+            elif question_i:
+                all_names[name][f"Question {i}"] = {
+                    "Question": question_i.strip(),
+                    "Answer": "No answer found"
+                }
+            elif not answer_i or not question_i:
+                print(i)
                 print(name)
                 print(f"answer_i type: {type(answer_i)}")  # Check type
-                print(f"answer_i value: {answer_i}")  # Check value
-                
+                print(f"answer_i value: {answer_i}")  # Check value                   
             i += 1
     return all_names
+
+def dict_to_csv(data_dict, filename):
+    with open("data/"+filename, "w", newline="") as f:
+        w = csv.writer(f, delimiter='$')
+        w.writerow(['User', 'Questions', 'Answers'])
+
+        for user, questions in data_dict.items():
+            for question, answer_dict in questions.items():
+                question_text = answer_dict.get('Question', '')
+                answer_text = answer_dict.get('Answer', '')
+                w.writerow([user, question_text, answer_text])
+
+def csv_to_dict_2(csv_file):
+    data_dict = {}
+    
+    with open(csv_file, newline="") as f:
+        reader = csv.reader(f, delimiter='$')
+        next(reader)  # Skip the header row
+        
+        for row in reader:
+            user, question, answer = row
+            if user not in data_dict:
+                data_dict[user] = {}
+            data_dict[user][question] = answer
+    
+    return data_dict
 
 def dict_to_csv(data_dict, filename):
     with open("data/"+filename, "w", newline="") as f:
