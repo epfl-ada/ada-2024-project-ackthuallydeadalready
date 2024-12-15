@@ -108,16 +108,16 @@ def scrape_by_name_all_qs(names):
                     "Question": question_i.strip(),
                     "Answer": answer_i.get_text(strip=True)
                 }
-            elif question_i:
+            else:
                 all_names[name][f"Question {i}"] = {
                     "Question": question_i.strip(),
                     "Answer": "No answer found"
                 }
-            elif not answer_i or not question_i:
                 print(i)
                 print(name)
                 print(f"answer_i type: {type(answer_i)}")  # Check type
-                print(f"answer_i value: {answer_i}")  # Check value                   
+                print(f"answer_i value: {answer_i}")  # Check value        
+                           
             i += 1
     return all_names
 
