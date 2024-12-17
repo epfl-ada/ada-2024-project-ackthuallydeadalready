@@ -32,11 +32,23 @@ def extract_topic(combined_texts,qa_pairs):
     # Extract concise topics
     topics = []
     for text in combined_texts:
+        #print(text)
         keywords = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 3), stop_words='english', top_n=1)
         topics.append(keywords[0][0] if keywords else "No topic found")
 
-    # Display each Q&A pair with its main topic
+    #Display each Q&A pair with its main topic
     for i, (qa, topic) in enumerate(zip(qa_pairs, topics)):
         print(f"Q: {qa['question']}")
         print(f"A: {qa['answer']}")
         print(f"Main Topic: {topic}\n")
+
+
+#make one that takes the question and answer pair dataframe and goes through, returning the dataframe with an additional column named topic
+def extract_topic_from_df(df, model=KeyBERT()):
+    #test on the first few rows, but make it work fully since the beginning
+    df['topic']=(df['Question']+df['Answer']).apply(lambda x: model.extract_keywords(x, keyphrase_ngram_range=(1, 3),
+        stop_words='english', top_n=1)[0][0] if model.extract_keywords(x, keyphrase_ngram_range=(1, 3),stop_words='english',
+        top_n=1) else "No topic found")
+    return df
+
+
