@@ -7,240 +7,421 @@
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <style>
-        /* General Styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
+        #year-selection-map {
+        background-color: #113569;
+    }
+
+        #year-selection-map::-webkit-slider-thumb {
+            background: url('images/slider.png') center center/cover;
+            border-radius: 50%;       }
+        #myDiv {
+            margin-bottom: -70px;
+            line-height: 1.2;    
         }
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-            padding: 2rem 0;
-        }
-        h1, h2, h3 {
-            margin-bottom: 1rem;
-        }
-        p {
-            margin-bottom: 1.5rem;
+        * {box-sizing: border-box;}
+
+        .img-comp-container {
+        position: relative;
+        height: 700px; 
         }
 
-        /* Gradient Banner (Header) */
-        .header {
-            background: linear-gradient(to right, red, lightblue);
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header .project-name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .header .logo-links img {
-            width: 40px;
-            height: auto;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        .header .logo-links img:hover {
-            opacity: 0.8;
+        .img-comp-img {
+        position: absolute;
+        width: auto;
+        height: auto;
+        overflow:hidden;
         }
 
-        /* Floating Legend */
-        .legend {
-            position: fixed;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            background: #f8f8f8;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .img-comp-img img {
+        display:block;
         }
-        .legend a {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #007BFF;
-            text-decoration: none;
+        .center-text {
+        text-align: center;
+    }
+
+        .img-comp-slider {
+        position: absolute;
+        z-index: 9;
+        cursor: ew-resize;
+
+        width: 30px; 
+        height: 30px; 
+        background: url('images/5678889.png') center center/cover; 
+        border-radius: 50%;
+    }
+        @font-face {
+            font-family: 'fonttext'; 
+            src: url('font/ATCArquette-Regular.ttf') format('truetype');
         }
-        .legend a:hover {
-            text-decoration: underline;
+        @font-face {
+            font-family: 'fonttitle'; 
+            src: url('font/ATCArquette-Medium.ttf') format('truetype');
         }
 
-        /* Alternating Background Colors */
-        .intro-section {
-            background-color: #f0f8ff; /* Light blue */
-            text-align: center;
-        }
-        .data-visualization {
-            background-color: white;
-        }
-        .insights-section {
-            background-color: #f0f8ff; /* Light blue */
-        }
-        .call-to-action {
-            background-color: white;
-            text-align: center;
-        }
-
-        /* Insights Grid */
-        .insights-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .insight-item {
-            padding: 1.5rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Footer */
-        .footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 1.5rem 1rem;
-            margin-top: 2rem;
-        }
-        .footer p, .footer ul {
-            margin: 0;
-            padding: 0;
-        }
-        .footer ul {
-            list-style: none;
+        .center-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            align-items: center;
+            height: 300px; 
         }
-        .footer ul li a {
-            color: white;
-            text-decoration: none;
+        .center-image {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .footer ul li a:hover {
-            text-decoration: underline;
+
+
+        .toc-wrapper {
+            margin-left: -4rem; 
+        }
+        
+        nav.blue {
+            background: linear-gradient(to right, #FF184E, #CEF2E8); 
+        }
+
+        p, ul, ol {
+            font-family: 'Lora', 'Times New Roman', serif;
+            line-height: 1.5 !important;
+            font-size: 1.3rem !important;
+            overflow-wrap: break-word !important;
+            font-weight: 400 !important;
+            text-align: justify;
+        }
+        p, ol, ul {
+            font-family: 'fonttext', 'Times New Roman', serif;
+        }
+
+        h1, h2 {
+            font-size: 4em;
+            font-family: 'fonttitle', 'Times New Roman', serif;
+        }
+        h2 {
+            font-size: 3em;
+        }
+
+
+        #hidden-image {
+            display: none;
+        }
+
+        .brand-logo {
+            font-family: 'fonttitle', sans-serif; 
+            margin-left: 2rem !important;
+        }
+        .nav.gradient {
+            background: linear-gradient(to right,#FF184E,#CEF2E8);
+        }
+        p, ul, ol {
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.5 !important;
+            font-size: 1.3rem !important;
+            overflow-wrap: break-word !important;
+            font-weight: 400 !important;
+            text-align: justify;
+        }
+        p, ol, ul {
+            font-family: 'fonttext', 'Times New Roman', serif;
+        }
+        h1, h2 {
+            font-size: 4em;
+            font-family: 'fonttitle', 'Times New Roman', serif;
+        }
+        h2 {
+            font-size: 3em;
+        }
+        #hidden-image {
+            display: none;
+        }
+        .brand-logo {
+            font-family: 'fonttitle', sans-serif;
+            margin-left: 2rem;
+        }
+
+        .table-of-content a {
+            color: #CEF2E8 !important; 
+        }
+
+        .table-of-content a.active {
+            color: #FF184E !important; 
         }
     </style>
+        <script>
+            function initComparisons() {
+              var x, i;
+              /*find all elements with an "overlay" class:*/
+              x = document.getElementsByClassName("img-comp-overlay");
+              for (i = 0; i < x.length; i++) {
+                /*once for each "overlay" element:
+                pass the "overlay" element as a parameter when executing the compareImages function:*/
+                compareImages(x[i]);
+              }
+              function compareImages(img) {
+                var slider, img, clicked = 0, w, h;
+                /*get the width and height of the img element*/
+                w = img.offsetWidth;
+                h = img.offsetHeight;
+                /*set the width of the img element to 50%:*/
+                img.style.width = 0 + "px";
+                /*create slider:*/
+                slider = document.createElement("DIV");
+                slider.setAttribute("class", "img-comp-slider");
+                /*insert slider*/
+                img.parentElement.insertBefore(slider, img);
+                /*position the slider in the middle:*/
+                slider.style.top = (h / 2) - (slider.offsetHeight / 2) + "px";
+                slider.style.left = 0 + "px";
+                /*execute a function when the mouse button is pressed:*/
+                slider.addEventListener("mousedown", slideReady);
+                /*and another function when the mouse button is released:*/
+                window.addEventListener("mouseup", slideFinish);
+                /*or touched (for touch screens:*/
+                slider.addEventListener("touchstart", slideReady);
+                /*and released (for touch screens:*/
+                window.addEventListener("touchend", slideFinish);
+                function slideReady(e) {
+                  /*prevent any other actions that may occur when moving over the image:*/
+                  e.preventDefault();
+                  /*the slider is now clicked and ready to move:*/
+                  clicked = 1;
+                  /*execute a function when the slider is moved:*/
+                  window.addEventListener("mousemove", slideMove);
+                  window.addEventListener("touchmove", slideMove);
+                }
+                function slideFinish() {
+                  /*the slider is no longer clicked:*/
+                  clicked = 0;
+                }
+                function slideMove(e) {
+                  var pos;
+                  /*if the slider is no longer clicked, exit this function:*/
+                  if (clicked == 0) return false;
+                  /*get the cursor's x position:*/
+                  pos = getCursorPos(e)
+                  /*prevent the slider from being positioned outside the image:*/
+                  if (pos < 0) pos = 0;
+                  if (pos > w) pos = w;
+                  /*execute a function that will resize the overlay image according to the cursor:*/
+                  slide(pos);
+                }
+                function getCursorPos(e) {
+                  var a, x = 0;
+                  e = (e.changedTouches) ? e.changedTouches[0] : e;
+                  /*get the x positions of the image:*/
+                  a = img.getBoundingClientRect();
+                  /*calculate the cursor's x coordinate, relative to the image:*/
+                  x = e.pageX - a.left;
+                  /*consider any page scrolling:*/
+                  x = x - window.pageXOffset;
+                  return x;
+                }
+                function slide(x) {
+                  /*resize the image:*/
+                  img.style.width = x + "px";
+                  /*position the slider:*/
+                  slider.style.left = img.offsetWidth - (slider.offsetWidth / 2) + "px";
+                }
+              }
+            }
+            </script>
 </head>
 <body>
-    <!-- Header Section -->
-    <header class="header">
-        <div class="project-name">AkthuallyDeadAlready</div>
-        <div class="logo-links">
-            <a href="https://epfl-ada.github.io/teaching/fall2024/cs401/" target="_blank">
-                <img src="https://github.com/epfl-ada/ada-2024-project-ackthuallydeadalready/blob/main/images/ada.svg" alt="EPFL ADA">
-            </a>
-            <a href="https://github.com/epfl-ada/ada-2024-project-ackthuallydeadalready" target="_blank">
-                <img src="/images/ghub.svg" alt="GitHub Repo">
-            </a>
-        </div>
-    </header>
-
-    <!-- Floating Legend -->
-    <div class="legend">
-        <a href="#intro">Introduction</a>
-        <a href="#visualization">Visualizations</a>
-        <a href="#insights">Insights</a>
-        <a href="#cta">Get Involved</a>
+    <!-- Header -->
+    <div class="navbar-fixed">
+        <nav class="blue">
+            <div class="nav-wrapper">
+                <a class="brand-logo left">Ackthually Dead Already</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down" style="margin: 1rem">
+                    <li><a href="https://epfl-ada.github.io/teaching/fall2024/cs401/"><img src="images/ada.svg" alt="AdaWebsite" width="35" height="35"></a></li>
+                    <li><a href="https://github.com/epfl-ada/ada-2024-project-ackthuallydeadalready/"><img src="images/ghub.svg" alt="GitHub" width="30" height="30"></a></li>
+                </li>
+                </ul>
+            </div>
+        </nav>
     </div>
+    
+    <!-- Page -->
+    <main>
+        <div class="row">
+            <div class="col m2 l3"></div>
+            <div class="col m8 l6">
+                <div id="intro" class="section scrollspy">
+                    <h2>Public sentiments on Wikipedia admins and their consequences in RFA elections: A deep dive into voting patterns, community behavior, and sentiment trends shaping the Wikipedia admin landscape.</h2>
 
-    <!-- Introduction Section -->
-    <section class="intro-section" id="intro">
-        <div class="container">
-            <h1>Factors contributing to public sentiments on Wikipedia admins <br> and their consequences in RFA elections.</h1>
-            <p>A deep dive into voting patterns, community behavior, and sentiment trends shaping the Wikipedia admin landscape.</p>
-        </div>
-    </section>
+                    <p>
+                        Imagine a world where trust isn't just a virtue but a cornerstone of governance. 
+                        On Wikipedia, the administrators—those entrusted with safeguarding the platform's integrity—embark on a journey to earn this trust through a social consensus process called Request for Adminship (RfA). 
+                        Unlike the conventional voting systems we encounter in politics or workplaces, the RfA is more than just a tally of yeses and nos. 
+                        It's a nuanced conversation where every comment, question, and response shapes the community's decision.
+                    </p>
 
-    <!-- Data Visualization Section -->
-    <section class="data-visualization" id="visualization">
-        <div class="container">
-            <h2>Interactive Visualizations</h2>
-            <div class="chart-container">
-                <canvas id="sentimentChart"></canvas>
+                    <p>
+                        Now, what if we could peek into this dynamic process, unraveling the sentiments, themes, and turning points that sway opinions? Welcome to our project. 
+                        By combining the art of sentiment analysis with cutting-edge natural language processing, we aim to decode the fabric of consensus-building in Wikipedia's admin elections. 
+                        From policy stances to communication skills, we will uncover the topics that ignite the most spirited debates.
+                    </p>
+
+                    <p>
+                        But that's not all. Just as a keen observer tracks the evolution of actors' careers, we'll analyze how community discourse evolves over time. 
+                        Are certain topics fading into obscurity, or do they remain central to the decision-making process? How do individual voters engage with contentious issues? 
+                        And can we predict outcomes by examining the underlying dynamics of these discussions?
+                    </p>
+
+                    <p>
+                        Join us as we explore the rich social dynamics of Wikipedia's RfA process, offering insights not just into the world of online governance but also into designing more effective systems of collective decision-making.
+                    </p>
+
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/Evolution_of_Pass_Rates_and_votes.html" width="100%" height="500px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+                </div>
+                <div id="c" class="section scrollspy">
+
+                </div>
+                <div id="b" class="section scrollspy">
+                    
+                </div>
+                <div id="a" class="section scrollspy">
+                    
+                </div>
+                <div class="footer">
+
+                </div>
             </div>
-            <p>Sentiment analysis reveals a spectrum of emotions influencing votes. Explore how positivity or negativity trends over time.</p>
-        </div>
-    </section>
-
-    <!-- Key Insights Section -->
-    <section class="insights-section" id="insights">
-        <div class="container">
-            <h2>Key Findings</h2>
-            <div class="insights-grid">
-                <div class="insight-item">
-                    <h3>Trend Analysis</h3>
-                    <p>Neutral sentiments dominate voting, with notable spikes in positive language during successful campaigns.</p>
-                </div>
-                <div class="insight-item">
-                    <h3>Community Dynamics</h3>
-                    <p>Voting patterns reflect social clustering, with frequent voters often aligned on sentiment intensity.</p>
-                </div>
-                <div class="insight-item">
-                    <h3>Predictive Modeling</h3>
-                    <p>Our models suggest comment quality and frequency are strong predictors of electoral outcomes.</p>
+            <div class="col hide-on-med-and-down"></div>
+            <div class="col m2 l2">
+                <div class="toc-wrapper pinned">
+                    <ul class="section tab table-of-content" style="list-style-type: none;">
+                        <li>
+                            <a class="active" href="#intro">Introduction</a>
+                        </li>
+                        <li>
+                            <a class="active" href="#c">c</a>
+                        </li>
+                        <li>
+                            <a class="active" href="#b">b</a>
+                        </li>
+                        <li>
+                            <a class="active" href="#a">a</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Call to Action Section -->
-    <section class="call-to-action" id="cta">
-        <div class="container">
-            <h2>Get Involved</h2>
-            <p>Contribute to ongoing research and explore the dataset. Your insights could shape future findings.</p>
-            <button class="cta-button">Access the Dataset</button>
-        </div>
-    </section>
-
-    <!-- Footer Section -->
-    <footer class="footer">
-        <div class="container">
-            <p>© 2024 Wikipedia RFA Insights. All rights reserved.</p>
-            <ul class="social-links">
-                <li><a href="#">Twitter</a></li>
-                <li><a href="#">LinkedIn</a></li>
-                <li><a href="#">GitHub</a></li>
-            </ul>
-            <p>Thanks to EPFL</p>
-        </div>
-    </footer>
-
-    <!-- JavaScript for Interactivity -->
-    <script>
-        // Chart.js Example
-        const ctx = document.getElementById('sentimentChart').getContext('2d');
-        const sentimentChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-                datasets: [{
-                    label: 'Sentiment Over Time',
-                    data: [3, 5, 2, 8, 7],
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                },
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
-    </script>
+    </main>
 </body>
+<!--JavaScript at end of body for optimized loading-->
+<script type="text/javascript" src="js/materialize.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@materializecss/materialize@2.0.3/dist/js/materialize.min.js"></script>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        M.ScrollSpy.init(document.querySelectorAll('.scrollspy'), {});
+        M.Tabs.init(document.querySelectorAll('.tabs'), {});
+        
+        fetch("data.json")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            autocompletion_data = data.map(d => {
+                return {
+                    id: d.id,
+                    text: d.name
+                };
+            });
+            
+            M.Autocomplete.init(document.querySelectorAll('#autocomplete-input-profile-seq'), {
+                minLength: 1,
+                data: autocompletion_data,
+                onSearch: (text, autocomplete) => {
+                    const normSearch = text.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    autocomplete.setMenuItems(
+                        autocomplete.options.data
+                            .filter((option) => option.text?.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(normSearch))
+                            .slice(0, 10)
+                    );
+                },
+                onAutocomplete: e => {
+                    if (e.length) {
+                        var id = e[0].id;
+                        
+                        var elem = document.getElementById("selected-actor-career");
+                        elem.setAttribute("data", "https://www.adrienvannson.fr/epfl-ada-datastory/graphs/profile-sequences/" + id + ".html")
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+        fetch("data-genre-props.json")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            autocompletion_data = data.map(d => {
+                return {
+                    id: d.id,
+                    text: d.name
+                };
+            });
+            
+            M.Autocomplete.init(document.querySelectorAll('#autocomplete-input-genres-props'), {
+                minLength: 1,
+                data: autocompletion_data,
+                onSearch: (text, autocomplete) => {
+                    const normSearch = text.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    autocomplete.setMenuItems(
+                        autocomplete.options.data
+                            .filter((option) => option.text?.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(normSearch))
+                            .slice(0, 10)
+                    );
+                },
+                onAutocomplete: e => {
+                    if (e.length) {
+                        var id = e[0].id;
+                        
+                        var elem = document.getElementById("selected-actor-genres");
+                        elem.setAttribute("data", "https://www.adrienvannson.fr/epfl-ada-datastory/graphs/genres-props/" + id + ".html")
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    function updateMapTimelapse() {
+        var i = document.getElementById("year-selection-map").value;
+        var begin = 1890 + 10 * i;
+        begin = begin.toString();
+
+        var end = 1900 + 10 * i;
+        end = end.toString();
+
+        if (end == "2010") {
+            end = "2016"
+        }
+
+        var filename = "/epfl-ada-datastory/images/map/" + begin + "_" + end + ".png";
+        document.getElementById("map-timelapse").src = filename;
+
+        document.getElementById("current-year").innerText = begin + " - " + end;
+    }
+</script>
 </html>

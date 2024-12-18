@@ -41,7 +41,8 @@ def import_RFA():
     df['TXT']=clean_txt_column(df['TXT'])
 
     return df
-
+    
+#Two different Formats identified in the DAT column with typos
 #Error handling code from Stacksoverflow: "validate for multiple date / datetime formats" by 'c8999c 3f964f64'
 def validate_datetime(string, whitelist=('%H:%M, %d %B %Y', '%H:%M, %d %b %Y')):
     for fmt in whitelist:
@@ -75,3 +76,49 @@ def dates_prep(data):
     data = data.iloc[:,[0,1,2,3,4,5,7,8,6]]
 
     return data
+
+def prep_unique_elections(data_original):
+    unique_elections = data_original.drop_duplicates(subset=['TGT','YEA','RES']).groupby('TGT').value_counts(dropna=False).reset_index()
+    unique_elections= unique_elections.drop('count', axis=1)
+
+    unique_candidate_freq_table= pd.DataFrame(unique_elections['TGT'].value_counts())
+    single_runners_list = unique_candidate_freq_table[unique_candidate_freq_table['count']==1].index
+    multiple_runners_list = unique_candidate_freq_table[unique_candidate_freq_table['count']>1].index
+    
+    unique_candidate_freq_table = unique_candidate_freq_table.reset_index()
+
+    return unique_elections
+
+def prep_elec_id(unique_elections_data):
+    unique_elections_data['elec_id']= np.linspace(1,len(unique_elections_data),len(unique_elections_data))
+    unique_elections_data['elec_id']= unique_elections_data['elec_id'].astype(int)
+    
+    data['elec_id']= np.empty(198275)
+    data['elec_id']= data['elec_id'].astype(int)
+
+    for row in range(0,len(data['TGT']),1):
+        data.iloc[row,9] = unique_elections[(unique_elections['TGT']==data.iloc[row,1]) & 
+                                        (unique_elections['YEA']== data.iloc[row,4]) &
+                                        (unique_elections['RES']== data.iloc[row,3])]['elec_id']
+    #print(data.iloc[row,[0,1,9]], row) #To Troubleshoot and find row which is giving error
+
+    win,loss =[],[]
+    
+    for row in range(0,len(unique_candidate_freq_table),1):
+        if len(unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts().index) == 2:
+            loss.append(unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts()[0])
+            win.append(unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts()[1])
+        elif len(unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts().index) ==1 and\
+        unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts().index[0][1] == -1:
+            loss.append(unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts()[0])
+            win.append(0)
+        elif len(unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts().index) ==1 and\
+        unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts().index[0][1] == 1:
+            loss.append(0)
+            win.append(unique_elections[unique_elections['TGT']==unique_candidate_freq_table.iloc[row,0]][['TGT','RES']].value_counts()[0])
+        else:
+            print('Something unexpected happen')
+
+    unique_candidate_freq_table['win'] = win
+    unique_candidate_freq_table['loss'] = loss
+    return unique_candidate_freq_table
