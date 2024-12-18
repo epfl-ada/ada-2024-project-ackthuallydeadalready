@@ -129,12 +129,15 @@
         p, ol, ul {
             font-family: 'fonttext', 'Times New Roman', serif;
         }
-        h1, h2 {
+        h1, h2, h3 {
             font-size: 4em;
             font-family: 'fonttitle', 'Times New Roman', serif;
         }
         h2 {
             font-size: 3em;
+        }
+        h3 {
+            font-size: 2em;
         }
         #hidden-image {
             display: none;
@@ -251,12 +254,14 @@
         <div class="row">
             <div class="col m2 l3"></div>
             <div class="col m8 l6">
+
+                <!-- Intro -->
                 <div id="intro" class="section scrollspy">
-                    <h2>Public sentiments on Wikipedia admins and their consequences in RFA elections: A deep dive into voting patterns, community behavior, and sentiment trends shaping the Wikipedia admin landscape.</h2>
+                    <h2>Public sentiments on Wikipedia admins and their consequences in RfA elections: A deep dive into voting patterns, community behavior, and sentiment trends shaping the Wikipedia admin landscape.</h2>
 
                     <p>
                         Imagine a world where trust isn't just a virtue but a cornerstone of governance. 
-                        On Wikipedia, the administrators—those entrusted with safeguarding the platform's integrity—embark on a journey to earn this trust through a social consensus process called Request for Adminship (RfA). 
+                        On Wikipedia, the administrators, entrusted with safeguarding the platform's integrity, embark on a journey to earn this trust through a social consensus process called Request for Adminship (RfA). 
                         Unlike the conventional voting systems we encounter in politics or workplaces, the RfA is more than just a tally of yeses and nos. 
                         It's a nuanced conversation where every comment, question, and response shapes the community's decision.
                     </p>
@@ -268,30 +273,68 @@
                     </p>
 
                     <p>
-                        But that's not all. Just as a keen observer tracks the evolution of actors' careers, we'll analyze how community discourse evolves over time. 
-                        Are certain topics fading into obscurity, or do they remain central to the decision-making process? How do individual voters engage with contentious issues? 
-                        And can we predict outcomes by examining the underlying dynamics of these discussions?
+                        Join us as we explore the rich social dynamics of Wikipedia's RfA process, offering insights not just into the world of online governance but also into designing more effective systems of collective decision-making!
                     </p>
+
+                </div>
+
+                <!-- EDA -->
+                <div id="eda" class="section scrollspy">
+                    <h2>RfA Characterisation</h2>
+                    <p>
+                        You may still be unfamiliar with the RfA elections systems, that's why we choosed to break down in graphs what's important in RfAs.
+                        Try it yourself, you can find a voter that participated in a RFA just below! We'll show you how much they participated !
+                    </p>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">textsms</i>
+                                    <input type="text" id="autocomplete-input-profile-seq" class="autocomplete">
+                                    <label for="autocomplete-input-profile-seq">Find your favorite actor</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <object id="selected-actor-career" type="text/html" data="https://www.adrienvannson.fr/epfl-ada-datastory/graphs/profile-sequences/0bwh6.html" width="100%" height="400px">
+                        <p>Unable to load the included file.</p>
+                    </object>
 
                     <p>
-                        Join us as we explore the rich social dynamics of Wikipedia's RfA process, offering insights not just into the world of online governance but also into designing more effective systems of collective decision-making.
+                        Yeah, they're not like movies actors, you probably tried one at random and they might've not been quite active. 
+                        As you can se below, most of participants participate to few elections...
                     </p>
+                </div>
 
+                <!-- Sentiment and Topics -->
+                <div id="snt" class="section scrollspy">
+                    <h2>Sentiments and Topics</h2>
+                </div>
+
+                <!-- Community and Relations -->
+                <div id="cr" class="section scrollspy">
+                    <h2>Community Relations</h2>
+                </div>
+                
+                <!-- Just a tryout section -->
+                <div id="graph_test" class="section scrollspy">
+                    <h2>Graph Tests</h2>
                     <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/Evolution_of_Pass_Rates_and_votes.html" width="100%" height="500px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
-                </div>
-                <div id="c" class="section scrollspy">
 
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/vote_polarity.html" width="100%" height="700px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
                 </div>
-                <div id="b" class="section scrollspy">
-                    
-                </div>
-                <div id="a" class="section scrollspy">
-                    
-                </div>
+
+                <!-- Footer -->
                 <div class="footer">
-
+                    <h1>Conclusion</h1>
+                    <p>Text</p>
+                    <h3>Alexandre, Mikail, Maxence, Reinatt, Aidan</h3>
                 </div>
             </div>
             <div class="col hide-on-med-and-down"></div>
@@ -302,13 +345,16 @@
                             <a class="active" href="#intro">Introduction</a>
                         </li>
                         <li>
-                            <a class="active" href="#c">c</a>
+                            <a class="active" href="#eda">RFA Characterisation</a>
                         </li>
                         <li>
-                            <a class="active" href="#b">b</a>
+                            <a class="active" href="#snt">Sentiments and Topics</a>
                         </li>
                         <li>
-                            <a class="active" href="#a">a</a>
+                            <a class="active" href="#cr">Community Relations</a>
+                        </li>
+                        <li>
+                            <a class="active" href="#graph_test">Graph Tests</a>
                         </li>
                     </ul>
                 </div>
