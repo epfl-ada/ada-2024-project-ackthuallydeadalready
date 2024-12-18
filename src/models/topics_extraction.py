@@ -51,4 +51,11 @@ def extract_topic_from_df(df, model=KeyBERT()):
         top_n=1) else "No topic found")
     return df
 
+def extract_topic_from_df_text(df, model=KeyBERT()):
+    #test on the first few rows, but make it work fully since the beginning
+    df['topic']=(df['TXT']).apply(lambda x: model.extract_keywords(x, keyphrase_ngram_range=(1, 3),
+        stop_words='english', top_n=1)[0][0] if model.extract_keywords(x, keyphrase_ngram_range=(1, 3),stop_words='english',
+        top_n=1) else "No topic found")
+    return df
+
 
