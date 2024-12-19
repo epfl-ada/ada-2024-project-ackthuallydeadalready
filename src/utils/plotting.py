@@ -77,7 +77,6 @@ def plot_network(df, prt = False, savefig = False):
         x=node_x, y=node_y,
         mode='markers+text',
         marker=dict(size=10, color='gray'),
-        textposition="top center"
     )
 
     # Add edges to the plot
@@ -89,11 +88,11 @@ def plot_network(df, prt = False, savefig = False):
         src, tgt, attrs = edge
         edge_x += [pos[src][0], pos[tgt][0], None]
         edge_y += [pos[src][1], pos[tgt][1], None]
-        edge_colors.append('red' if attrs['weight'] == 1 else 'gray')
+        edge_colors.append('green' if attrs['weight'] == 1 else 'red')
 
     edge_trace = go.Scatter(
         x=edge_x, y=edge_y,
-        line=dict(width=1, color='red'),
+        line=dict(width=1, color=edge_colors),
         hoverinfo='none',
         mode='lines'
     )
@@ -111,5 +110,5 @@ def plot_network(df, prt = False, savefig = False):
     if prt:
         fig.show()
     if savefig :
-        fig.write_html('./Plots/connexion_graph.html')
+        fig.write_image('./Plots/connexion_graph.webp')
     return None

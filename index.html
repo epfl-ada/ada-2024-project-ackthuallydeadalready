@@ -282,13 +282,61 @@
                 <div id="eda" class="section scrollspy">
                     <h2>RfA Characterisation</h2>
                     <p>
-                        You may still be unfamiliar with the RfA elections systems, that's why we choosed to break down in graphs what's important in RfAs.
-                        Here's a clear graph to show you the intreactions !
+                        The RfA (Request for Adminship) process is the cornerstone of how Wikipedia selects its administrators. 
+                        To help you grasp the essence of these elections, we've visualized the intricate web of interactions that make up an RfA.
+                    </p>
+                    <p>
+                        Here's a graph representing the key players and their connections:
                     </p>
 
-                    <object id="ridiculogram" type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/connexion_graph.html" height="500px" width="100%">
+                    <object id="ridiculogram" type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/images/connexion.webp" height="500px" width="100%">
                         <p>Unable to load graph</p>
                     </object>
+
+                    <p>
+                        Okay, we admit it—this graph looks a bit chaotic! Let us break it down for you!
+                        Light blue nodes represent the participants and candidates, including voters who express their opinions through comments and votes, and each line represents a vote, with green lines for positive votes and red lines for negative votes.
+                        Behind every line lies a wealth of discussion and debate, as users deliberate on the candidate's qualifications. 
+                        These discussions, available on specific Wikipedia pages, are at the heart of the RfA process, shaping the opinions that drive each vote.
+                    </p>
+
+                    <p>
+                        But what about the broader trends? 
+                        How have the number of elections and their outcomes changed over the years? 
+                        Let's take a step back from individual interactions and look at the bigger picture. 
+                    </p>
+
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/Evolution_of_Pass_Rates_and_votes.html" width="100%" height="500px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+
+                    <p>
+                        From the graph, we see a steep decline in both the number of elections and the pass rate after the mid-2000s. 
+                        While the early years saw a relatively high success rate, later years became much more selective, with only a fraction of candidates passing. 
+                        This raises questions about shifting community standards, voter participation, and the changing dynamics of the RfA process.
+                    </p>
+
+                    <p>
+                        Now that we've looked at the overall trends, let's focus on a unique subset of the data: candidates who fail and decide to run again. 
+                        Interestingly, 91.79% of candidates pass on their first attempt, but for those who don't, patterns emerge.
+                        Many candidates who fail in one year re-run in consecutive years, hoping for better outcomes. 
+                        This opens up fascinating questions:
+                        What is the pass rate for candidates on their second or subsequent attempts?
+                        How much do vote counts or margins of loss change between attempts?
+                        Do candidates with close losses tend to run again sooner?
+                        To dig deeper, we'll explore these trends with detailed election statistics, including pass rates, votes per election, and margin analysis. 
+                    </p>
+
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/per_elections.html" width="100%" height="500px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+
+                    <p>
+                        On average, there are 56.7 votes per election.
+                        Half of all elections receive fewer than 41 votes, making this the most frequent vote count.
+                        90% of elections have fewer than 120 votes, showing a sharp cutoff for high participation.
+                        These findings will help us understand not only the motivations of re-running candidates but also the community's evolving standards for adminship.
+                    </p>
 
                     <!-- <div class="row">
                         <div class="col s12">
@@ -305,10 +353,6 @@
                     <object id="selected-actor-career" type="text/html" data="https://www.adrienvannson.fr/epfl-ada-datastory/graphs/profile-sequences/0bwh6.html" width="100%" height="400px">
                         <p>Unable to load the included file.</p>
                     </object> -->
-
-                    <p>
-                        Yeah, that's not very clear ...  
-                    </p>
                 </div>
 
                 <!-- Sentiment and Topics -->
@@ -324,9 +368,6 @@
                 <!-- Just a tryout section -->
                 <div id="graph_test" class="section scrollspy">
                     <h2>Graph Tests</h2>
-                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/Evolution_of_Pass_Rates_and_votes.html" width="100%" height="500px">
-                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
-                    </object>
 
                     <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/vote_polarity.html" width="100%" height="700px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
