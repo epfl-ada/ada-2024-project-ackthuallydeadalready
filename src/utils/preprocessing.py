@@ -66,7 +66,7 @@ def dates_prep(data_original, reorder=True):
     for t in data_original['DAT']:
         dates.append(validate_datetime(t))
 
-    dates = pd.DataFrame(dates, reorder=True)
+    dates = pd.DataFrame(dates)
     dates[dates[0]==False] = dates[dates[0]==False].replace(to_replace=False, value = float('NaN'))
 
     datetime_object_date = dates.apply(lambda x: x[0].date() if type(x[0])!=float else x[0], axis=1)
