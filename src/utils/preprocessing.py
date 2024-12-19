@@ -58,7 +58,7 @@ def validate_datetime(string, whitelist=('%H:%M, %d %B %Y', '%H:%M, %d %b %Y')):
     else: # all formats done, none did work...
         return False # could also raise an exception here
     
-def dates_prep(data_original):
+def dates_prep(data_original, reorder=True):
 
     data_original['YEA'] = data_original['YEA'].astype(int)
 
@@ -78,7 +78,8 @@ def dates_prep(data_original):
     data_original['MON'] = datetime_object_month
     data_original['TIM'] = datetime_object_time
     # Reordering columns
-    data_original = data_original.iloc[:,[0,1,2,3,4,5,7,8,6]]
+    if reorder: 
+        data_original = data_original.iloc[:,[0,1,2,3,4,5,7,8,6]]
 
     return data_original
 
