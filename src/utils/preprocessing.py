@@ -4,6 +4,9 @@ import pandas as pd
 import gzip
 import matplotlib.pyplot as plt
 import seaborn as sns
+import datetime as dt
+from datetime import datetime
+import calendar 
 
 # Parsing and importing datas
 def parse_vote(vote_str):
@@ -55,7 +58,8 @@ def validate_datetime(string, whitelist=('%H:%M, %d %B %Y', '%H:%M, %d %b %Y')):
     else: # all formats done, none did work...
         return False # could also raise an exception here
 
-def dates_prep(data):
+def dates_prep(data, reorder=True):
+    data['YEA'] = data['YEA'].astype(int)
     data['YEA'] = data['YEA'].astype(int)
     dates =[]
     for t in data['DAT']:
@@ -73,7 +77,8 @@ def dates_prep(data):
     data['MON'] = datetime_object_month
     data['TIM'] = datetime_object_time
     # Reordering columns
-    data = data.iloc[:,[0,1,2,3,4,5,7,8,6]]
+    if reorder :
+        data = data.iloc[:,[0,1,2,3,4,5,7,8,6]]
 
     return data
 
@@ -122,3 +127,27 @@ def prep_elec_id(unique_elections_data):
     unique_candidate_freq_table['win'] = win
     unique_candidate_freq_table['loss'] = loss
     return unique_candidate_freq_table
+
+
+def complete_prepro_w_sa_topics(df_path = "data/rfa_bert_vader_topic.csv", qs_path = 'data/all_questions_and_answers_w_topic.csv'):
+    qs = pd.read_csv(qs_path)
+    qs['Question'] = qs['Question'].astype(str)
+    qs['Answer'] = qs['Answer'].astype(str)
+    threshold = 10
+    topic_counts = qs['topic'].value_counts()
+    valid_topics = topic_counts[topic_counts >= threshold].index
+    qs = qs[qs['topic'].isin(valid_topics)]
+    df=pd.read_csv(df_path, index_col=0)
+    df['TXT'] = df['TXT'].astype(str)
+    df['DAT'] = df['DAT'].astype(str)
+    df['SRC'] = df['SRC'].fillna('anonymous voters')
+    df=dates_prep(df, reorder=False)
+    unique_attempts = pd.DataFrame(df.drop_duplicates(subset=['TGT','YEA','RES'])).sort_values(by=['TGT', 'YEA'])
+    unique_attempts['Attempt'] = unique_attempts.groupby('TGT').cumcount() + 1
+    df = df.merge(unique_attempts[['TGT', 'YEA','RES', 'Attempt']], on=['TGT', 'YEA','RES'], how='left')
+    df['total_vote_count'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform('count')
+    df['pos_votes'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform(lambda x: (x == 1).sum())
+    df['neu_votes'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform(lambda x: (x == 0).sum())
+    df['neg_votes'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform(lambda x: (x == -1).sum())
+    return df, qs
+
