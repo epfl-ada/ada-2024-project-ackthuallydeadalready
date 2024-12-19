@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import zscore
-from imblearn.over_sampling import SMOTE
+#from imblearn.over_sampling import SMOTE
 
 
 
@@ -93,7 +93,6 @@ def preprocess_and_predict2(df):
     X = X.reset_index(drop=True)
     y = y.reset_index(drop=True)
 
-    X.columns = X.columns.astype(str)
 
     # Sample to avoid memory errors
     X_sample, _, y_sample, _ = train_test_split(X, y, test_size=0.9, random_state=42)
@@ -216,6 +215,8 @@ def preprocess_and_predict_test(df):
     X = pd.concat([numerical_features, topic_y_df], axis=1)
     y = df['RES']
 
+    X.columns = X.columns.astype(str)
+
     # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -234,12 +235,15 @@ def preprocess_and_predict_test(df):
     X_test[['sentiment_binary', 'vader_neg', 'vader_neu', 'vader_pos', 'vader_compound', 'topic_x_encoded']] = numerical_features_scaled_test
 
     # Apply SMOTE to balance the training set
-    smote = SMOTE(random_state=42)
-    X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
+    #smote = SMOTE(random_state=42)
+    #X_train_smote, y_train_smote = smote.fit_resample(X_train, y_train)
 
     # Linear regression model
+    #model = LinearRegression()
+    #model.fit(X_train_smote, y_train_smote)
+
     model = LinearRegression()
-    model.fit(X_train_smote, y_train_smote)
+    model.fit(X_train, y_train)
 
     # Predictions
     y_pred = model.predict(X_test)
