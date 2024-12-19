@@ -2,6 +2,8 @@ import sys
 import src.utils.preprocessing as pre
 import matplotlib.pyplot as plt
 import numpy as np
+import networkx as nx
+import plotly.graph_objects as go
 
 def plot_byYear(df):
     '''
@@ -56,4 +58,58 @@ def comment_size(df):
 
     plt.bar(range(len(values)), list(values.values()), log=True)
     plt.show()
+    return None
+
+def plot_network(df, prt = False, savefig = False):
+    G = nx.DiGraph()
+
+    for _, row in df.iterrows():
+        G.add_edge(row['SRC'], row['TGT'], weight=row['VOT'])
+
+    pos = nx.spring_layout(G)  # or nx.circular_layout(G)
+
+    # Extract node positions
+    node_x = [pos[node][0] for node in G.nodes]
+    node_y = [pos[node][1] for node in G.nodes]
+
+    # Add nodes to the plot
+    node_trace = go.Scatter(
+        x=node_x, y=node_y,
+        mode='markers+text',
+        marker=dict(size=10, color='gray'),
+        textposition="top center"
+    )
+
+    # Add edges to the plot
+    edge_x = []
+    edge_y = []
+    edge_colors = []
+
+    for edge in G.edges(data=True):
+        src, tgt, attrs = edge
+        edge_x += [pos[src][0], pos[tgt][0], None]
+        edge_y += [pos[src][1], pos[tgt][1], None]
+        edge_colors.append('red' if attrs['weight'] == 1 else 'gray')
+
+    edge_trace = go.Scatter(
+        x=edge_x, y=edge_y,
+        line=dict(width=1, color='red'),
+        hoverinfo='none',
+        mode='lines'
+    )
+
+    # Create the final figure
+    fig = go.Figure(data=[edge_trace, node_trace],
+                layout=go.Layout(
+                    title='User Connections',
+                    showlegend=False,
+                    hovermode='closest',
+                    margin=dict(b=0, l=0, r=0, t=0),
+                    xaxis=dict(showgrid=False, zeroline=False),
+                    yaxis=dict(showgrid=False, zeroline=False)
+                ))
+    if prt:
+        fig.show()
+    if savefig :
+        fig.write_html('./Plots/connexion_graph.html')
     return None
