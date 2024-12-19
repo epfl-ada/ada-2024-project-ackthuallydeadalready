@@ -217,6 +217,7 @@ def complete_prepro_w_sa_topics(df_path = "data/rfa_bert_vader_topic.csv", qs_pa
     qs = pd.read_csv(qs_path)
     qs['Question'] = qs['Question'].astype(str)
     qs['Answer'] = qs['Answer'].astype(str)
+    qs['User'] = qs['User'].astype(str)
     threshold = 10
     topic_counts = qs['topic'].value_counts()
     valid_topics = topic_counts[topic_counts >= threshold].index
@@ -233,5 +234,7 @@ def complete_prepro_w_sa_topics(df_path = "data/rfa_bert_vader_topic.csv", qs_pa
     df['pos_votes'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform(lambda x: (x == 1).sum())
     df['neu_votes'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform(lambda x: (x == 0).sum())
     df['neg_votes'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform(lambda x: (x == -1).sum())
+    df['prop_pos_vot']= df['pos_votes']/(df['pos_votes']+df['neu_votes']+df['neg_votes'])
+
     return df, qs
 
