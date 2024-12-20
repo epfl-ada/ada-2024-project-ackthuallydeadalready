@@ -10,6 +10,7 @@ from plotly.subplots import make_subplots
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import LabelEncoder, StandardScaler
+import plotly.io as pio
 
 
 
@@ -119,7 +120,387 @@ def plot_network(df, prt = False, savefig = False, path = './res/images/connexio
         fig.write_image(path)
     return None
 
+def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
+    if vader :
+        data['sentiment_vader'] = data.apply(
+            lambda row: 'POSITIVE' if row['vader_pos'] > row['vader_neg'] else 'NEGATIVE', axis=1
+        )
 
+        sentiment_stats_vader = data.groupby(['sentiment_vader', 'RES']).size().unstack(fill_value=0)
+
+        # Calculate total and success rate by sentiment
+        sentiment_stats_vader['Total'] = sentiment_stats_vader.sum(axis=1)
+        sentiment_stats_vader['Pass Rate'] = sentiment_stats_vader[1] / sentiment_stats_vader['Total']
+
+        # Format for plotting
+        df_g = sentiment_stats_vader[[1, -1, 'Total']].reset_index().rename(columns={1: 'pos', -1: 'neg'})
+        df_g2 = sentiment_stats_vader[['Pass Rate']].reset_index()
+
+        fig = go.Figure(
+            data=[
+                # Bar for Losses
+                go.Bar(
+                    x=df_g['sentiment_vader'],
+                    y=df_g['neg'],
+                    name="Losses",
+                    text=df_g['neg'],
+                    textposition='inside',
+                    marker=dict(color="salmon")
+                ),
+                # Bar for Wins
+                go.Bar(
+                    x=df_g['sentiment_vader'],
+                    y=df_g['pos'],
+                    name="Wins",
+                    text=df_g['pos'],
+                    textposition='inside',
+                    marker=dict(color="teal")
+                ),
+                # Bar for Totals
+                go.Bar(
+                    x=df_g['sentiment_vader'],
+                    y=df_g['Total'],
+                    name="Total",
+                    text=df_g['Total'],
+                    textposition='outside',
+                    marker=dict(color="blue")
+                ),
+            ],
+            layout=dict(bargap=0.2,barcornerradius=15)
+        )
+
+        # Overlay line graph for Pass Rate
+        fig.add_trace(
+            go.Scatter(
+                x=df_g2['sentiment_vader'],
+                y=df_g2['Pass Rate'] * 100,  # Convert to percentage
+                mode="lines+markers+text",
+                name="Pass Rate",
+                text=[f"{pr * 100:.1f}%" for pr in df_g2["Pass Rate"]],
+                textposition="top center",
+                line=dict(color="red", width=2),
+                marker=dict(color="red", size=8),
+                yaxis="y2"
+            )
+        )
+
+        # Update layout
+        fig.update_layout(
+            title=dict(
+                text="Success Rate vs Voter Sentiment",
+                x=0.5,
+                xanchor="center"
+            ),
+            xaxis=dict(
+                title="Voter Sentiment"
+            ),
+            yaxis=dict(
+                title="Counts",
+                side="left"
+            ),
+            yaxis2=dict(
+                title="Pass Rate (%)",
+                overlaying="y",
+                side="right",
+                range=[0, 100],
+                tickformat=".0f"
+            ),
+            barmode="group",
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        )
+        if prt:
+            fig.show()
+        if savefig :
+            pio.write_image(fig, file="res/Plots/pass_rates_positive_negative_vader.html", auto_open=False)
+    else :
+        sentiment_stats = data.groupby(['sentiment', 'RES']).size().unstack(fill_value=0)
+
+        # Calculate total and success rate by sentiment
+        sentiment_stats['Total'] = sentiment_stats.sum(axis=1)
+        sentiment_stats['Pass Rate'] = sentiment_stats[1] / sentiment_stats['Total']
+
+        # Format for plotting
+        df_g = sentiment_stats[[1, -1, 'Total']].reset_index().rename(columns={1: 'pos', -1: 'neg'})
+        df_g2 = sentiment_stats[['Pass Rate']].reset_index()
+
+        fig = go.Figure(
+            data=[
+                # Bar for Losses
+                go.Bar(
+                    x=df_g['sentiment'],
+                    y=df_g['neg'],
+                    name="Losses",
+                    text=df_g['neg'],
+                    textposition='inside',
+                    marker=dict(color="salmon")
+                ),
+                # Bar for Wins
+                go.Bar(
+                    x=df_g['sentiment'],
+                    y=df_g['pos'],
+                    name="Wins",
+                    text=df_g['pos'],
+                    textposition='inside',
+                    marker=dict(color="teal")
+                ),
+                # Bar for Totals
+                go.Bar(
+                    x=df_g['sentiment'],
+                    y=df_g['Total'],
+                    name="Total",
+                    text=df_g['Total'],
+                    textposition='outside',
+                    marker=dict(color="blue")
+                ),
+            ],
+            layout=dict(bargap=0.2,barcornerradius=15)
+        )
+
+        # Overlay line graph for Pass Rate
+        fig.add_trace(
+            go.Scatter(
+                x=df_g2['sentiment'],
+                y=df_g2['Pass Rate'] * 100,  # Convert to percentage
+                mode="lines+markers+text",
+                name="Pass Rate",
+                text=[f"{pr * 100:.1f}%" for pr in df_g2["Pass Rate"]],
+                textposition="top center",
+                line=dict(color="red", width=2),
+                marker=dict(color="red", size=8),
+                yaxis="y2"
+            )
+        )
+
+        # Update layout
+        fig.update_layout(
+            title=dict(
+                text="Success Rate vs Voter Sentiment",
+                x=0.5,
+                xanchor="center"
+            ),
+            xaxis=dict(
+                title="Voter Sentiment"
+            ),
+            yaxis=dict(
+                title="Counts",
+                side="left"
+            ),
+            yaxis2=dict(
+                title="Pass Rate (%)",
+                overlaying="y",
+                side="right",
+                range=[0, 100],
+                tickformat=".0f"
+            ),
+            barmode="group",
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        )
+        if prt:
+            fig.show()
+        if savefig :
+            pio.write_html(fig, file="res/Plots/pass_rates_positive_negative.html", auto_open=False)
+    return None
+
+def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
+    if vader:
+        data['sentiment_vader'] = data.apply(
+            lambda row: 'POSITIVE' if row['vader_pos'] > row['vader_neg'] else 'NEGATIVE', axis=1
+        )
+
+        sentiment_by_year = pd.DataFrame({
+            'POSITIVE': data[data['sentiment_vader'] == 'POSITIVE'].groupby('YEA')['RES'].count(),
+            'NEGATIVE': data[data['sentiment_vader'] == 'NEGATIVE'].groupby('YEA')['RES'].count(),
+        }).fillna(0)
+
+        # Add percentages
+        sentiment_by_year['POSITIVE_PERC'] = sentiment_by_year['POSITIVE'] / sentiment_by_year.sum(axis=1)
+        sentiment_by_year['NEGATIVE_PERC'] = sentiment_by_year['NEGATIVE'] / sentiment_by_year.sum(axis=1)
+
+        # Reset index for plotting
+        sentiment_by_year = sentiment_by_year.reset_index()
+
+        # Data for bar and line plots
+        df_g = sentiment_by_year.drop(['POSITIVE_PERC', 'NEGATIVE_PERC'], axis=1)
+        df_g['TOTAL'] = df_g.sum(axis=1)
+
+        df_g2 = sentiment_by_year[['YEA', 'POSITIVE_PERC']]
+
+        fig = go.Figure(
+            data=[
+                go.Bar(
+                    x=df_g.YEA,
+                    y=df_g.NEGATIVE,
+                    name="NEGATIVE",
+                    text=df_g.NEGATIVE,
+                    textposition="inside",
+                    marker=dict(color="salmon")
+                ),
+                go.Bar(
+                    x=df_g.YEA,
+                    y=df_g.POSITIVE,
+                    name="POSITIVE",
+                    text=df_g.POSITIVE,
+                    textposition="inside",
+                    marker=dict(color="teal")
+                ),
+                go.Bar(
+                    x=df_g.YEA,
+                    y=df_g.TOTAL,
+                    name="Total",
+                    text=df_g.TOTAL,
+                    textposition="outside",
+                    marker=dict(color="blue")
+                ),
+            ],
+            layout=dict(
+                barcornerradius=15,
+            ),
+        )
+
+        # Overlay line graph for Positive Sentiment Rate
+        fig.add_trace(
+            go.Scatter(
+                x=df_g2.YEA,
+                y=df_g2.POSITIVE_PERC * 100,  # Convert to percentage
+                mode="lines+markers+text",
+                name="Positive Sentiment Rate",
+                text=[f"{pr*100:.1f}%" for pr in df_g2["POSITIVE_PERC"]],
+                textposition="top center",
+                line=dict(color="red", width=2),
+                marker=dict(color="red", size=8),
+                yaxis="y2"
+            )
+        )
+
+        # Update layout for dual y-axis
+        fig.update_layout(
+            title=dict(
+                text="Evolution of Positive and Negative Sentiments Over Years",
+                x=0.5,
+                xanchor="center"
+            ),
+            xaxis=dict(
+                title="Year",
+                tickvals=df_g.YEA,
+            ),
+            yaxis=dict(
+                title="Counts",
+                side="left"
+            ),
+            yaxis2=dict(
+                title="Positive Sentiment Rate (%)",
+                overlaying="y",
+                side="right",
+                range=[0, 100],
+                tickformat=".0f%",
+            ),
+            barmode="group",
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        )
+
+        if prt:
+            fig.show()
+        if savefig :
+            pio.write_html(fig, file="res/Plots/Evolution_of_Sentiments_vader.html", auto_open=False)
+
+    else :
+        # Compute sentiment stats by year
+        sentiment_by_year = pd.DataFrame({
+            'POSITIVE': data[data['sentiment'] == 'POSITIVE'].groupby('YEA')['RES'].count(),
+            'NEGATIVE': data[data['sentiment'] == 'NEGATIVE'].groupby('YEA')['RES'].count(),
+        })
+
+        # Add percentages
+        sentiment_by_year['POSITIVE_PERC'] = sentiment_by_year['POSITIVE'] / sentiment_by_year.sum(axis=1)
+        sentiment_by_year['NEGATIVE_PERC'] = sentiment_by_year['NEGATIVE'] / sentiment_by_year.sum(axis=1)
+
+        # Reset index for plotting
+        sentiment_by_year = sentiment_by_year.reset_index()
+
+        # Data for bar and line plots
+        df_g = sentiment_by_year.drop(['POSITIVE_PERC', 'NEGATIVE_PERC'], axis=1)
+        df_g['TOTAL'] = df_g.sum(axis=1)
+
+        df_g2 = sentiment_by_year[['YEA', 'POSITIVE_PERC']]
+
+        fig = go.Figure(
+            data=[
+                go.Bar(
+                    x=df_g.YEA,
+                    y=df_g.NEGATIVE,
+                    name="NEGATIVE",
+                    text=df_g.NEGATIVE,
+                    textposition="inside",
+                    marker=dict(color="salmon")
+                ),
+                go.Bar(
+                    x=df_g.YEA,
+                    y=df_g.POSITIVE,
+                    name="POSITIVE",
+                    text=df_g.POSITIVE,
+                    textposition="inside",
+                    marker=dict(color="teal")
+                ),
+                go.Bar(
+                    x=df_g.YEA,
+                    y=df_g.TOTAL,
+                    name="Total",
+                    text=df_g.TOTAL,
+                    textposition="outside",
+                    marker=dict(color="blue")
+                ),
+            ],
+            layout=dict(
+                barcornerradius=15,
+            ),
+        )
+
+        # Overlay line graph for Positive Sentiment Rate
+        fig.add_trace(
+            go.Scatter(
+                x=df_g2.YEA,
+                y=df_g2.POSITIVE_PERC * 100,  # Convert to percentage
+                mode="lines+markers+text",
+                name="Positive Sentiment Rate",
+                text=[f"{pr*100:.1f}%" for pr in df_g2["POSITIVE_PERC"]],
+                textposition="top center",
+                line=dict(color="red", width=2),
+                marker=dict(color="red", size=8),
+                yaxis="y2"
+            )
+        )
+
+        # Update layout for dual y-axis
+        fig.update_layout(
+            title=dict(
+                text="Evolution of Positive and Negative Sentiments Over Years",
+                x=0.5,
+                xanchor="center"
+            ),
+            xaxis=dict(
+                title="Year",
+                tickvals=df_g.YEA,
+            ),
+            yaxis=dict(
+                title="Counts",
+                side="left"
+            ),
+            yaxis2=dict(
+                title="Positive Sentiment Rate (%)",
+                overlaying="y",
+                side="right",
+                range=[0, 100],
+                tickformat=".0f%",
+            ),
+            barmode="group",
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        )
+
+        if prt:
+            fig.show()
+        if savefig :
+            pio.write_html(fig, file="res/Plots/Evolution_of_Sentiments.html", auto_open=False)
+    return None
 
 def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
     df = pre.complete_prepro_w_sa_topics()[0]

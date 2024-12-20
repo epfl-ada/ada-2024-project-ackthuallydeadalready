@@ -332,24 +332,6 @@ def preprossess_eda(data, prepdates = True,impor = True):
         df_processed = separate_flagged_elec_id(df,flagged_elec_id)
     return df_processed, df, unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list, flagged_elec_id
 
-def preprossess_sa_topics(data, prepdates = True,impor = True):
-    '''
-    >12min
-    '''
-    if prepdates:
-        df = dates_prep(data)
-    else :
-        df = data.copy()
-    unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list  = prep_unique_elections(df)
-    unique_elections, df = assign_elec_id(unique_elections,df)
-    unique_candidate_freq_table = calc_win_loss(unique_candidate_freq_table,unique_elections)
-    flagged_elec_id = flag_elec_id(unique_elections, df)
-    if impor :
-        file_path = 'res/data/processed_elec_data.csv'
-        df_processed = pd.read_csv(file_path)
-    else :
-        df_processed = separate_flagged_elec_id(df,flagged_elec_id)
-    return df_processed, df, unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list, flagged_elec_id
 
 def single_multi_stat(unique_elections,single_runners_list,multiple_runners_list):
     '''
