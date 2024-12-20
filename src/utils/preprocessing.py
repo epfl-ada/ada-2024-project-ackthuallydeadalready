@@ -25,7 +25,7 @@ def clean_txt_column(df):
 
 def import_RFA():
     data = []
-    with gzip.open('data/wiki-RfA.txt.gz', 'rt') as file:
+    with gzip.open('res/data/wiki-RfA.txt.gz', 'rt') as file:
         content = file.read()
 
         # Split votes using blank lines
