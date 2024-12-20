@@ -516,7 +516,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
 
 
 
-def visualize_cooperation_test(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
+def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
     df = pre.complete_prepro_w_sa_topics()[0]  # Assuming pre is defined elsewhere
 
     # Drop rows with NaN values in 'VOT' column
