@@ -516,7 +516,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
 
 
 
-def visualize_cooperation_test(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
+def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
     df = pre.complete_prepro_w_sa_topics()[0]  # Assuming pre is defined elsewhere
 
     # Drop rows with NaN values in 'VOT' column
@@ -608,7 +608,7 @@ def visualize_cooperation_test(prt=False, save_fig=False, path='./res/images/coo
 
 
 
-def plot_clusters(sn_clusters=5):
+def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clusters.webp'):
     """
     Plots clusters in a dataset using KMeans clustering, organized by sentiment, topic_x, and topic_y.
     
@@ -627,8 +627,8 @@ def plot_clusters(sn_clusters=5):
     le_topic_y = LabelEncoder()
     
     data['sentiment_encoded'] = le_sentiment.fit_transform(data['sentiment'])
-    data['topic_x_encoded'] = le_topic_x.fit_transform(data[topic_x])
-    data['topic_y_encoded'] = le_topic_y.fit_transform(data[topic_y])
+    data['topic_x_encoded'] = le_topic_x.fit_transform(data['topic_x'])
+    data['topic_y_encoded'] = le_topic_y.fit_transform(data['topic_y'])
     
     # Select features for clustering
     features = ['sentiment_encoded', 'topic_x_encoded', 'topic_y_encoded']
@@ -643,7 +643,7 @@ def plot_clusters(sn_clusters=5):
     X_pca = pca.fit_transform(X_scaled)
     
     # Apply KMeans clustering
-    kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+    kmeans = KMeans(n_clusters=sn_clusters, random_state=42)
     data['cluster'] = kmeans.fit_predict(X_pca)
     
     # Plot clusters
@@ -664,7 +664,7 @@ def plot_clusters(sn_clusters=5):
     if prt:
         fig.show()
     if save_fig:
-        fig.write_image(path)
+        fig.savefig(path)
 
     return data[['sentiment_label', 'topic_x_label', 'topic_y_label', 'cluster']]
 
