@@ -11,6 +11,8 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import plotly.io as pio
+import src.utils.plotting as plot
+from matplotlib.lines import Line2D
 
 
 
@@ -25,6 +27,8 @@ def scatter_votes_year(df):
     plt.scatter(np.linspace(2003,2013,11),df[['YEA']].value_counts(sort=False)) 
     return None
 
+
+
 def boxplot_votes(df, src = 'SRC', vot = 'VOT'):
     '''
     boxplot_votes(df[, src, vot])
@@ -38,6 +42,8 @@ def boxplot_votes(df, src = 'SRC', vot = 'VOT'):
     '''
     plt.boxplot(df.groupby(src)[vot].count()) 
     return None
+
+
 
 def comment_size(df): 
     '''
@@ -54,6 +60,8 @@ def comment_size(df):
     plt.bar(range(len(values)), list(values.values()), log=True)
     plt.show()
     return None
+
+
 
 def plot_network(df, prt = False, savefig = False, path = './res/images/connexion.webp'):
     '''
@@ -119,6 +127,8 @@ def plot_network(df, prt = False, savefig = False, path = './res/images/connexio
     if savefig :
         fig.write_image(path)
     return None
+
+
 
 def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
     if vader :
@@ -300,6 +310,8 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
         if savefig :
             pio.write_html(fig, file="res/Plots/pass_rates_positive_negative.html", auto_open=False)
     return None
+
+
 
 def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
     if vader:
@@ -502,216 +514,98 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
             pio.write_html(fig, file="res/Plots/Evolution_of_Sentiments.html", auto_open=False)
     return None
 
-def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
-    df = pre.complete_prepro_w_sa_topics()[0]
-    df = df.dropna(subset='VOT')
-
-    required_columns = ['SRC', 'TGT', 'VOT', 'YEA']
-    if not all(col in df.columns for col in required_columns):
-        raise ValueError(f"Dataframe must contain columns: {', '.join(required_columns)}")
-
-    # Get unique years
-    years = sorted(df['YEA'].unique())
-    n_cols = 5
-    n_rows = -(-len(years) // n_cols)  # Ceiling division for rows
-
-    # Create subplots using Plotly
-    fig = make_subplots(
-        rows=n_rows, cols=n_cols,
-        subplot_titles=[str(year) for year in years],  # Only show the year as the title
-        vertical_spacing=0.1, horizontal_spacing=0.05
-    )
-
-    for idx, year in enumerate(years):
-        # Filter data for the current year
-        year_data = df[df['YEA'] == year]
-
-        # Create a graph
-        G = nx.Graph()
-        for _, row in year_data.iterrows():
-            src = row['SRC']
-            tgt = row['TGT']
-            vot = row['VOT']
-            if G.has_edge(src, tgt):
-                if G[src][tgt]['vote'] != vot:
-                    G.remove_edge(src, tgt)
-            G.add_edge(src, tgt, vote=vot)
-
-        # Get node positions using a layout
-        pos = nx.spring_layout(G, seed=42)
-        edge_x = []
-        edge_y = []
-        edge_colors = []
-        for edge in G.edges(data=True):
-            x0, y0 = pos[edge[0]]
-            x1, y1 = pos[edge[1]]
-            edge_x.extend([x0, x1, None])
-            edge_y.extend([y0, y1, None])
-
-            # Determine edge color based on vote
-            vote = edge[2].get('vote', 0)
-            if vote == 1:
-                edge_colors.append('green')
-            elif vote == -1:
-                edge_colors.append('red')
-            else:
-                edge_colors.append('gray')
-
-        # Create edge traces
-        edge_trace = go.Scatter(
-            x=edge_x, y=edge_y,
-            line=dict(width=1),
-            mode='lines',
-            hoverinfo='none',
-            marker=dict(color=edge_colors)  # Apply the color to edges
-        )
-
-        # Create node traces
-        node_x = []
-        node_y = []
-        for node in G.nodes():
-            x, y = pos[node]
-            node_x.append(x)
-            node_y.append(y)
-
-        node_trace = go.Scatter(
-            x=node_x, y=node_y,
-            mode='markers',
-            marker=dict(
-                size=4,  # Very small node size for better readability
-                color='lightblue',
-                line_width=1
-            ),
-            hoverinfo='none'  # Remove hover info to hide node names
-        )
-
-        # Add traces to the subplot
-        row, col = divmod(idx, n_cols)
-        fig.add_trace(edge_trace, row=row + 1, col=col + 1)
-        fig.add_trace(node_trace, row=row + 1, col=col + 1)
-
-    # Update layout for better presentation
-    fig.update_layout(
-        height=300 * n_rows, width=200 * n_cols,
-        title_text="Cooperation Networks Over the Years",
-        showlegend=False
-    )
-
-    if prt:
-        fig.show()
-
-    if save_fig:
-        fig.write_image(path)
-
-    return None
-
-
 
 
 def visualize_cooperation_test(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
-    df = pre.complete_prepro_w_sa_topics()[0]
+    df = pre.complete_prepro_w_sa_topics()[0]  # Assuming pre is defined elsewhere
 
-    df = df.dropna(subset='VOT')
+    # Drop rows with NaN values in 'VOT' column
+    df = df.dropna(subset=['VOT'])
 
-    required_columns = ['SRC', 'TGT', 'VOT', 'YEA']
+    required_columns = ['SRC', 'TGT', 'VOT', 'YEA', 'DAT', 'Attempt']
     if not all(col in df.columns for col in required_columns):
         raise ValueError(f"Dataframe must contain columns: {', '.join(required_columns)}")
 
+    # Ensure the 'DAT' column is in datetime format
+    df['DAT'] = pd.to_datetime(df['DAT'])
+
+    # Drop the original TIM column, as it's now merged into DAT
+    df = df.drop(columns=['TIM'])
+
+    # Sort by DAT to ensure the most recent vote is retained
+    df = df.sort_values(by='DAT').drop_duplicates(subset=['SRC', 'TGT', 'Attempt'], keep='last')
+
     # Get unique years
     years = sorted(df['YEA'].unique())
-    n_cols = 5
-    n_rows = -(-len(years) // n_cols)  # Ceiling division for rows
 
-    # Create subplots using Plotly
-    fig = make_subplots(
-        rows=n_rows, cols=n_cols,
-        subplot_titles=[str(year) for year in years],  # Only show the year as the title
-        vertical_spacing=0.1, horizontal_spacing=0.05
-    )
+    # Create a grid of subplots: 3 columns, enough rows to cover all years
+    n_cols = 3
+    n_rows = -(-len(years) // n_cols)  # Ceiling division to determine number of rows
 
+    # Create a figure and axes for the subplots
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 3 * n_rows), sharex=True, sharey=True)
+
+    # Flatten the axes array in case the number of rows and columns don't match exactly
+    axes = axes.flatten()
+
+    # Loop through each year and plot the graph on the corresponding subplot
     for idx, year in enumerate(years):
+        print(year, '\n')
+        ax = axes[idx]
+        
         # Filter data for the current year
         year_data = df[df['YEA'] == year]
 
-                # Create graph
+        # Initialize a graph for this year
         G = nx.Graph()
-        for _, row in df_test.iterrows():
-            G.add_edge(row['SRC'], row['TGT'], vote=row['VOT'])
 
-        # Get positions
-        pos = nx.spring_layout(G, seed=42)  # You can adjust the seed or use another layout
-        edge_x = []
-        edge_y = []
-        edge_colors = []
+        # Add nodes explicitly (add only unique SRC values)
+        for src in year_data['SRC']:
+            G.add_node(src)
 
-        # Create separate traces for each edge color
-        edge_traces = []
+        # Group by TGT and VOT, and for each group, create edges between the SRC values
+        for (tgt, vot), group in year_data.groupby(['TGT', 'VOT']):
+            for i, row1 in group.iterrows():
+                for j, row2 in group.iterrows():
+                    if i < j:  # Avoid adding duplicate edges
+                        color = {1: 'red', -1: 'green', 0: 'blue'}.get(row1['VOT'], 'black')
+                        G.add_edge(row1['SRC'], row2['SRC'], color=color)
 
-        # Collect edge data
-        for edge in G.edges(data=True):
-            x0, y0 = pos[edge[0]]
-            x1, y1 = pos[edge[1]]
-            edge_x.extend([x0, x1, None])
-            edge_y.extend([y0, y1, None])
-            vote = edge[2].get('vote', 0)
+        # Get the edge colors based on 'VOT'
+        edge_colors = [G[u][v]['color'] for u, v in G.edges()]
 
-            if vote == 1:
-                edge_color = 'green'
-            elif vote == -1:
-                edge_color = 'red'
-            else:
-                edge_color = 'gray'
+        # Plot the graph for the current year on the corresponding subplot
+        pos = nx.spring_layout(G, k=0.5)  # Adjust the layout for compactness
+        nx.draw(G, pos, with_labels=False, node_color='lightblue', edge_color=edge_colors, width=1, node_size=30, font_size=8, ax=ax)  # Reduced node size
 
-            # Create a separate edge trace for each edge
-            edge_trace = go.Scatter(
-                x=edge_x, y=edge_y,
-                line=dict(width=1, color=edge_color),
-                mode='lines',
-                hoverinfo='none'
-            )
-            edge_traces.append(edge_trace)
+        # Set the title for each subplot (year)
+        ax.set_title(f"Year {year}")
 
-            # Reset edge_x and edge_y for next iteration
-            edge_x = []
-            edge_y = []
+        # Create a custom legend for the VOT values
+        legend_labels = {1: 'VOT=1', -1: 'VOT=-1', 0: 'VOT=0'}
+        handles = [Line2D([0], [0], color='red', lw=3, label='VOT=1'),
+                   Line2D([0], [0], color='green', lw=3, label='VOT=-1'),
+                   Line2D([0], [0], color='blue', lw=3, label='VOT=0')]
 
-        # Collect node data
-        node_x = []
-        node_y = []
-        for node in G.nodes():
-            x, y = pos[node]
-            node_x.append(x)
-            node_y.append(y)
+        # Add the legend to the plot
+        ax.legend(handles=handles, title="Vote (VOT)", loc='upper left')
 
-        # Create node trace
-        node_trace = go.Scatter(
-            x=node_x, y=node_y,
-            mode='markers',
-            marker=dict(
-                size=10,  # Adjust the size of the nodes
-                color='lightblue',
-                line_width=2
-            ),
-            hoverinfo='none'
-        )
+    # Remove any extra subplots (axes that are not used)
+    for i in range(len(years), len(axes)):
+        fig.delaxes(axes[i])
 
-        # Create figure and add traces
-        fig = go.Figure(data=edge_traces + [node_trace])
-
-    # Update layout for better presentation
-    fig.update_layout(
-        height=300 * n_rows, width=200 * n_cols,
-        title_text="Cooperation Networks Over the Years",
-        showlegend=False
-    )
+    # Adjust the layout for better spacing
+    plt.tight_layout()
 
     if prt:
-        fig.show()
+        plt.show()
 
     if save_fig:
-        fig.write_image(path)
+        fig.savefig(path)
 
     return None
+
+
 
 
 def plot_clusters(sn_clusters=5):
