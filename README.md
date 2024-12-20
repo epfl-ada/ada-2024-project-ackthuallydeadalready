@@ -91,3 +91,8 @@ results.ipynb contains:
 - Sentiment Analysis
 - Topic Analysis
 - Visualization computing  
+
+
+Notes : pip requirments -> specifier pip freeze
+
+list : cooperation, eda semntiment and topics
