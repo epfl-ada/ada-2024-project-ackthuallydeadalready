@@ -63,7 +63,7 @@ def comment_size(df):
 
 
 
-def plot_network(df, prt = False, savefig = False, path = './res/images/connexion.webp'):
+def plot_network(df, prt = False, savefig = False, path = './res/Plots/connexion.webp'):
     '''
     plot_network(df[, prt, savefig, path])
     ## Function
@@ -197,7 +197,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
         # Update layout
         fig.update_layout(
             title=dict(
-                text="Success Rate vs Voter Sentiment",
+                text="Success Rate vs Voter Sentiment using Vader",
                 x=0.5,
                 xanchor="center"
             ),
@@ -284,7 +284,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
         # Update layout
         fig.update_layout(
             title=dict(
-                text="Success Rate vs Voter Sentiment",
+                text="Success Rate vs Voter Sentiment using HuggingFace",
                 x=0.5,
                 xanchor="center"
             ),
@@ -387,7 +387,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
         # Update layout for dual y-axis
         fig.update_layout(
             title=dict(
-                text="Evolution of Positive and Negative Sentiments Over Years",
+                text="Evolution of Positive and Negative Sentiments Over Years using Vader",
                 x=0.5,
                 xanchor="center"
             ),
@@ -485,7 +485,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
         # Update layout for dual y-axis
         fig.update_layout(
             title=dict(
-                text="Evolution of Positive and Negative Sentiments Over Years",
+                text="Evolution of Positive and Negative Sentiments Over Years using HuggingFace",
                 x=0.5,
                 xanchor="center"
             ),
@@ -516,7 +516,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
 
 
 
-def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
+def visualize_cooperation(prt=False, save_fig=False, path='./res/Plots/cooperation.webp'):
     df = pre.complete_prepro_w_sa_topics()[0]  # Assuming pre is defined elsewhere
 
     # Drop rows with NaN values in 'VOT' column
@@ -697,7 +697,7 @@ def plot_topics_pass(data,comment=True,prt=False,savefig=False):
 
         # Update layout
         fig.update_layout(
-            title="Vote Outcomes for Top 10 Topics (Ordered by Frequency)",
+            title="Vote Outcomes for Top 10 Topics (Ordered by Number of Occurences) for Comments",
             xaxis_title="Topics",
             yaxis_title="Count",
             barmode='group',  # Group bars side-by-side
@@ -747,7 +747,7 @@ def plot_topics_pass(data,comment=True,prt=False,savefig=False):
 
         # Update layout
         fig.update_layout(
-            title="Vote Outcomes for Top 10 Topics in topic_y (Ordered by Frequency)",
+            title="Vote Outcomes for Top 10 Topics (Ordered by Number of Occurences) for Discussions",
             xaxis_title="Topics",
             yaxis_title="Count",
             barmode='group', 
