@@ -18,25 +18,18 @@ def sa_hug(df,max=512): # Allows user to specify the max number of tokens
     results = sentiment_analyzer(df['TXT'].tolist())
     df['sentiment'] = [result['label'] for result in results]
     df['confidence'] = [result['score'] for result in results] #needed? maybe it just uselessly makes the file bigger?
+    df.to_csv('data/rfa_bert.csv', index=False)
     return df
 
 
-def sa_vader(df):
+def sa_vader(file='data/rfa_bert.csv'):
+    data.to_csv(df, index=False)
     analyzer = SentimentIntensityAnalyzer()
     sentiment = df['TXT'].apply(lambda x:analyzer.polarity_scores(x))
     df[['vader_neg', 'vader_neu', 'vader_pos', 'vader_compound']]=sentiment.apply(lambda x: pd.Series([x['neg'], x['neu'],
                                                                                                       x['pos'], x['compound']]))
     return df
 
-
-def sa_vader2(df):
-    analyzer = SentimentIntensityAnalyzer()
-    sentiment = df['TXT'].str.apply(lambda x:analyzer.polarity_scores(x))
-    df['vader_neg']=[sent['neg'] for sent in sentiment]
-    df['vader_neu']=[sent['neu'] for sent in sentiment]
-    df['vader_pos']=[sent['pos'] for sent in sentiment]
-    df['compound']=[sent['compound'] for sent in sentiment]
-    return df
 
 
 def sa_vader_test(df):

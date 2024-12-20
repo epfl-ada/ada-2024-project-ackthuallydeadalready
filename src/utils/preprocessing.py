@@ -214,7 +214,7 @@ def separate_flagged_elec_id(complete_dataset, flagged):
     return x
 
 
-def complete_prepro_w_sa_topics(df_path = "data/rfa_bert_vader_topic.csv", qs_path = 'data/all_questions_and_answers_w_topic.csv'):
+def complete_prepro_w_sa_topics(df_path = "res/data/rfa_bert_vader_topic.csv", qs_path = 'res/data/all_questions_and_answers_w_topic.csv'):
     qs = pd.read_csv(qs_path)
     qs['Question'] = qs['Question'].astype(str)
     qs['Answer'] = qs['Answer'].astype(str)
@@ -236,6 +236,11 @@ def complete_prepro_w_sa_topics(df_path = "data/rfa_bert_vader_topic.csv", qs_pa
     df['neu_votes'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform(lambda x: (x == 0).sum())
     df['neg_votes'] = df.groupby(['TGT', 'Attempt'])['VOT'].transform(lambda x: (x == -1).sum())
     df['prop_pos_vot']= df['pos_votes']/(df['pos_votes']+df['neu_votes']+df['neg_votes'])
+
+    qs.rename(columns={'User': 'TGT'}, inplace=True)
+    topic_sets = qs.groupby(['TGT', 'Attempt'])['topic'].apply(lambda x: set(x)).reset_index()
+    df= df.merge(topic_sets, on=['TGT', 'Attempt'], how='left')
+
 
     return df, qs
 
