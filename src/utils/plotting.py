@@ -16,7 +16,6 @@ from matplotlib.lines import Line2D
 from sklearn.preprocessing import MultiLabelBinarizer
 
 
-
 def scatter_votes_year(df):
     '''
     scatter_votes_year(df)
@@ -517,7 +516,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
 
 
 
-def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
+def visualize_cooperation_test(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
     df = pre.complete_prepro_w_sa_topics()[0]  # Assuming pre is defined elsewhere
 
     # Drop rows with NaN values in 'VOT' column
@@ -577,7 +576,8 @@ def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperat
 
         # Plot the graph for the current year on the corresponding subplot
         pos = nx.spring_layout(G, k=0.5)  # Adjust the layout for compactness
-        nx.draw(G, pos, with_labels=False, node_color='lightblue', edge_color=edge_colors, width=1, node_size=30, font_size=8, ax=ax)  # Reduced node size
+        nx.draw(G, pos, with_labels=False, node_color='none', edge_color=edge_colors, width=1, node_size=10, 
+                font_size=8, ax=ax, node_shape='o', linewidths=2, edgecolors='black')  # Reduced node size
 
         # Set the title for each subplot (year)
         ax.set_title(f"Year {year}")
@@ -605,8 +605,6 @@ def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperat
         fig.savefig(path)
 
     return None
-
-
 
 
 
