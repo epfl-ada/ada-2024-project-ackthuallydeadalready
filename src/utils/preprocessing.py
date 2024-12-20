@@ -10,6 +10,15 @@ import calendar
 
 # Parsing and importing datas
 def parse_vote(vote_str):
+    '''
+    parse_vote(vote_str)
+    ## Function
+    Parse each vote
+    ## Variable
+    vote_str : srting
+    ## Return
+    vote_dict : dict, containing parsed vote
+    '''
     vote_dict = {}
     lines = vote_str.split('\n')
     for line in lines:
@@ -19,11 +28,28 @@ def parse_vote(vote_str):
     return vote_dict
 
 def clean_txt_column(df):
-    # Remove ''' - and -- characters
+    '''
+    clean_txt_column(df)
+    ## Function
+    Remove ' and - characters
+    ## Variable
+    df : panda dataframe
+    ## Return
+    df : panda dataframe, without problematic characters
+    '''
     df = df.str.replace(r"['-]+", "", regex=True)
     return df
 
 def import_RFA():
+    '''
+    import_RFA()
+    ## Function
+    Import and parse the Request for Adminship original dataset
+    ## Variables
+    None
+    ## Return
+    df : pandas dataframe
+    '''
     data = []
     with gzip.open('res/data/wiki-RfA.txt.gz', 'rt') as file:
         content = file.read()
@@ -59,6 +85,12 @@ def validate_datetime(string, whitelist=('%H:%M, %d %B %Y', '%H:%M, %d %b %Y')):
         return False # could also raise an exception here
     
 def dates_prep(data_original, reorder=True):
+    '''
+    dates_prep(data_original[, reorder])
+    ## Function
+    ## Variables
+    ## Return
+    '''
 
     data_original['YEA'] = data_original['YEA'].astype(int)
 
@@ -84,6 +116,12 @@ def dates_prep(data_original, reorder=True):
     return data_original
 
 def prep_unique_elections(data_original):
+    '''
+    prep_unique_elections(data_original)
+    ## Function
+    ## Variables
+    ## Return
+    '''
     uniq_elections = data_original.drop_duplicates(subset=['TGT','YEA','RES']).groupby('TGT').value_counts(dropna=False).reset_index()
     uniq_elections= uniq_elections.drop('count', axis=1)
 
@@ -96,6 +134,12 @@ def prep_unique_elections(data_original):
     return uniq_elections, uniq_cand_freq_table, sing_runners_list, mult_runners_list
 
 def assign_elec_id(uniq_elections_data, complete_dataset): #i.e. (unique_elections_data, data)
+    '''
+    assign_elec_id(uniq_elections_data, complete_dataset)
+    ## Function
+    ## Variables
+    ## Return
+    '''
     uniq_elections_data['elec_id']= np.linspace(1,len(uniq_elections_data),len(uniq_elections_data))
     uniq_elections_data['elec_id']= uniq_elections_data['elec_id'].astype(int)
     
@@ -112,7 +156,12 @@ def assign_elec_id(uniq_elections_data, complete_dataset): #i.e. (unique_electio
 
 
 def calc_win_loss(uniq_cand_freq_table, uniq_elections_data):
-
+    '''
+    calc_win_loss(uniq_cand_freq_table, uniq_elections_data)
+    ## Function
+    ## Variables
+    ## Return
+    '''
     win,loss =[],[]
     
     for row in range(0,len(uniq_cand_freq_table),1):
@@ -135,7 +184,12 @@ def calc_win_loss(uniq_cand_freq_table, uniq_elections_data):
     return uniq_cand_freq_table
 
 def flag_elec_id(uniq_elections_data, complete_dataset):
-
+    '''
+    flag_elec_id(uniq_elections_data, complete_dataset)
+    ## Function
+    ## Variables
+    ## Return
+    '''
     flagged = []
 
     for elec_id in uniq_elections_data['elec_id']:
@@ -174,12 +228,23 @@ def flag_elec_id(uniq_elections_data, complete_dataset):
     return flagged
 
 def get_flagged_boundaries(flagged):
+    '''
+    get_flagged_boundaries(flagged)
+    ## Function
+    ## Variables
+    ## Return
+    '''
     flagged_with_boundaries = (flagged.groupby('elec_id').min()).merge(flagged.groupby('elec_id').max(), on='elec_id', suffixes=('_lower','_upper'))
 
     return flagged_with_boundaries
 
 def separate_flagged_elec_id(complete_dataset, flagged):
-    
+    '''
+    separate_flagged_elec_id(complete_dataset, flagged)
+    ## Function
+    ## Variables
+    ## Return
+    '''
     x = complete_dataset.copy()
     flagged_with_bounds = get_flagged_boundaries(flagged=flagged)
 
@@ -213,8 +278,89 @@ def separate_flagged_elec_id(complete_dataset, flagged):
 
     return x
 
+def get_votes(complete_dataset):
+
+    votes_by_elec = pd.DataFrame(complete_dataset.groupby('elec_id')['RES'].agg('count'))
+    votes_by_elec = votes_by_elec.rename(columns={'RES':'TOT'})
+    votes_by_elec = votes_by_elec.reset_index()
+
+    pos = complete_dataset[complete_dataset['VOT']==1].groupby('elec_id')['VOT'].agg('count').reset_index()
+    pos = pos.rename(columns={'VOT':'POS'})
+    #pos
+
+    abs = complete_dataset[complete_dataset['VOT']==0].groupby('elec_id')['VOT'].agg('count').reset_index()
+    abs = abs.rename(columns={'VOT':'ABS'})
+    #abs
+
+    neg = complete_dataset[complete_dataset['VOT']==-1].groupby('elec_id')['VOT'].agg('count').reset_index()
+    neg = neg.rename(columns={'VOT':'NEG'})
+    #abs
+
+    votes_by_elec = votes_by_elec.merge(pos, on='elec_id', how='left')
+    votes_by_elec = votes_by_elec.merge(abs, on='elec_id', how='left')
+    votes_by_elec = votes_by_elec.merge(neg, on='elec_id', how='left')
+
+    votes_by_elec= votes_by_elec.fillna(0)
+
+
+    votes_by_elec['POS'] = votes_by_elec['POS'].astype(int)
+    votes_by_elec['ABS'] = votes_by_elec['ABS'].astype(int)
+    votes_by_elec['NEG'] = votes_by_elec['NEG'].astype(int)
+
+    complete_dataset = complete_dataset.merge(votes_by_elec, how='left',on='elec_id')
+
+    return votes_by_elec, complete_dataset
+
+def preprossess_eda(data, impor = True):
+    '''
+    >12min
+    '''
+    df = dates_prep(data)
+    unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list  = prep_unique_elections(df)
+    unique_elections, df = assign_elec_id(unique_elections,df)
+    unique_candidate_freq_table = calc_win_loss(unique_candidate_freq_table,unique_elections)
+    flagged_elec_id = flag_elec_id(unique_elections, df)
+    if impor :
+        file_path = 'res/data/processed_elec_data.csv'
+        df_processed = pd.read_csv(file_path)
+    else :
+        df_processed = separate_flagged_elec_id(df,flagged_elec_id)
+    return df_processed, df, unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list, flagged_elec_id
+
+def single_multi_stat(unique_elections,single_runners_list,multiple_runners_list):
+    '''
+    '''
+    sing_mult_stats = pd.DataFrame({'SING' : unique_elections[unique_elections['TGT'].isin(single_runners_list)]['RES'].value_counts(normalize=False),
+                'SING_PERC' : unique_elections[unique_elections['TGT'].isin(single_runners_list)]['RES'].value_counts(normalize=True),
+                'MULT' : unique_elections[unique_elections['TGT'].isin(multiple_runners_list)]['RES'].value_counts(normalize=False),
+                'MULT_PERC' : unique_elections[unique_elections['TGT'].isin(multiple_runners_list)]['RES'].value_counts(normalize=True)
+    })
+
+    sing_mult_stats_total = pd.DataFrame(sing_mult_stats.sum(axis=0)).rename(columns={0:'Total'}).transpose().astype(int)
+
+    sing_mult_stats = pd.concat([sing_mult_stats,sing_mult_stats_total], axis=0)
+    return sing_mult_stats
+
+def passrate_byYear(df1):
+    passrate_by_year = pd.DataFrame({'WIN': df1.drop_duplicates('elec_id').reset_index().drop('index', axis=1).groupby('YEA')['RES'].value_counts(normalize=False).unstack().fillna(0).iloc[:,1].astype(int),
+                                    'LOSS': df1.drop_duplicates('elec_id').reset_index().drop('index', axis=1).groupby('YEA')['RES'].value_counts(normalize=False).unstack().fillna(0).iloc[:,0].astype(int),
+                                    'WIN_PERC': df1.drop_duplicates('elec_id').reset_index().drop('index', axis=1).groupby('YEA')['RES'].value_counts(normalize=True).unstack().fillna(0).iloc[:,1],
+                                    'LOSS_PERC': df1.drop_duplicates('elec_id').reset_index().drop('index', axis=1).groupby('YEA')['RES'].value_counts(normalize=True).unstack().fillna(0).iloc[:,0],
+    })
+
+    passrate_by_year.reset_index()
+
+    return passrate_by_year
 
 def complete_prepro_w_sa_topics(df_path = "res/data/rfa_bert_vader_topic.csv", qs_path = 'res/data/all_questions_and_answers_w_topic.csv'):
+    '''
+    prep_unique_elections(data_original)
+    ## Function
+    ## Variables
+    ## Return
+
+    takes csv vader and hug sa, preprocess it, return preprossed dataframe with additional features and questions/answers topics
+    '''
     qs = pd.read_csv(qs_path)
     qs['Question'] = qs['Question'].astype(str)
     qs['Answer'] = qs['Answer'].astype(str)
