@@ -63,6 +63,78 @@ def comment_size(df):
 
 
 
+def linear_pred_influ_vot(df, acc_thr=0.95, prt=False, save=False):
+    user_accuracy = (
+        df.groupby('SRC')
+        .apply(lambda x: ((x['RES'] == x['VOT']) | (x['RES']==0) & (x['VOT']==-1)).mean())  # Proportion of correct predictions
+        .reset_index(name='accuracy')
+    )
+    
+    # Filter users with at least 95% accuracy
+    election_participation = (
+        df.drop_duplicates(subset=['SRC', 'TGT', 'YEA', 'RES'])  # Unique elections
+        .groupby('SRC')
+        .size()
+        .reset_index(name='num_elections')
+    )
+    
+    # Merge the two DataFrames
+    result = pd.merge(user_accuracy, election_participation, on='SRC')
+    influential_users = result[result['accuracy'] >= acc_thr]
+
+
+    fig = go.Figure()
+
+    # Add scatter plot for all users
+    fig.add_trace(go.Scatter(
+        x=result['num_elections'],
+        y=result['accuracy'],
+        mode='markers',
+        marker=dict(color='blue', opacity=0.6),
+        name='User Accuracy vs Elections'
+    ))
+    
+    # Add a vertical line for the median number of elections
+    median_elections = result['num_elections'].median()
+    fig.add_trace(go.Scatter(
+        x=[median_elections, median_elections],
+        y=[0, 1],
+        mode='lines',
+        line=dict(color='red', dash='dash'),
+        name='Median Elections'
+    ))
+
+    # Add a horizontal line for the accuracy threshold
+    fig.add_trace(go.Scatter(
+        x=[result['num_elections'].min(), result['num_elections'].max()],
+        y=[acc_thr, acc_thr],
+        mode='lines',
+        line=dict(color='green', dash='dash'),
+        name=f'Accuracy Threshold ({acc_thr * 100}%)',
+        hovertemplate=(
+            'SRC: %{text}<br>' +
+            'Accuracy: %{y:.2f}<br>' +
+            'Num Elections: %{x}<br>' +
+            '<extra></extra>'
+        ),
+        text=result['SRC'],  # Pass SRC column for hover text
+    ))
+
+    # Update the layout of the plot
+    fig.update_layout(
+        title='Accuracy vs Number of Elections Participated in',
+        xaxis_title='Number of Elections Participated in',
+        yaxis_title='Accuracy (Proportion of Correct Predictions)',
+        showlegend=True, template='plotly_white'
+    )
+    if prt:
+        fig.show()
+    if save:
+        fig.write_html('res/Plots/accuracy_vs_participation.html')
+    return None
+
+
+
 def plot_network(df, prt = False, savefig = False, path = './res/Plots/connexion.webp'):
     '''
     plot_network(df[, prt, savefig, path])
