@@ -654,7 +654,6 @@ def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clu
     plt.ylabel('PCA Component 2', fontsize=14)
     plt.colorbar(scatter, label='Cluster')
     plt.grid(True, linestyle='--', alpha=0.6)
-    plt.show()
     
     # Add informative labels to clusters
     data['sentiment_label'] = le_sentiment.inverse_transform(data['sentiment_encoded'])
@@ -662,9 +661,9 @@ def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clu
     data['topic_y_label'] = le_topic_y.inverse_transform(data['topic_y_encoded'])
     
     if prt:
-        fig.show()
+        plt.show()
     if save_fig:
-        fig.savefig(path)
+        plt.savefig(path)
 
     return data[['sentiment_label', 'topic_x_label', 'topic_y_label', 'cluster']]
 
