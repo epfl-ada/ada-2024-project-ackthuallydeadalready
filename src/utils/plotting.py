@@ -5,52 +5,38 @@ import numpy as np
 import networkx as nx
 import plotly.graph_objects as go
 
-def plot_byYear(df):
+def scatter_votes_year(df):
     '''
-    plot_byYear(df)
+    scatter_votes_year(df)
     ## Function
     Plots the scatter of the number of votes per year between 2003 and 2013
     ## Variables
-    df : dataset with a column 'YEA' containing int from 2003 to 2013
+    df : dataset, contain a column 'YEA' with int from 2003 to 2013
     '''
     plt.scatter(np.linspace(2003,2013,11),df[['YEA']].value_counts(sort=False)) 
     return None
 
-def boxplot_byUser(df, src = 'SRC', vot = 'VOT'):
+def boxplot_votes(df, src = 'SRC', vot = 'VOT'):
     '''
-    plot_byUser(df[, src, vot])
+    boxplot_votes(df[, src, vot])
     ## Function
-    Plots the number of votes per user in a box plot format.
+    Plots the number of votes per user or target in a box plot format.
     src is set to 'SRC' and vot to 'VOT' per default
     ## Variables
     df : dataset 
-    src : string of the name of the column containing string of the user 
-    vot : string of a binary column corresponding to the voter's approbation or disaproval
+    src : string, name of the column containing the names ('SRC' or 'TGT')
+    vot : string, name of column corresponding to the voter's approbation or disaproval
     '''
     plt.boxplot(df.groupby(src)[vot].count()) 
     return None
 
-def boxplot_byTarget(df, tgt = 'TGT', vot = 'VOT'):
-    '''
-    plot_byTarget(df[, tgt, vot])
-    ## Function
-    Plots the number of votes each candidate has received in a box plot.
-    tgt is set to 'TGT' and vot to 'VOT' per default
-    ## Variables
-    df : dataset 
-    tgt : string of the name of the column containing string of the target
-    vot : string of a binary column corresponding to the voter's approbation or disaproval
-    '''
-    plt.boxplot(df.groupby(tgt)[vot].count()) 
-    return None
-
 def comment_size(df): 
     '''
-    plot_byTarget(df)
+    comment_size(df)
     ## Function
     Plots the sizes of the comments in a bar plot. The comments are assumed in a column of name 'TXT'
     ## Variables
-    df : dataset
+    df : dataset, contain a column 'TXT' with string
     '''
     sizeOcomment =df['TXT'].str.len() # Converts the series to str to be able to compute the length
     unique, counts = np.unique(sizeOcomment, return_counts=True) # Filters out comments that are simply a copy paste of another comment
@@ -60,7 +46,19 @@ def comment_size(df):
     plt.show()
     return None
 
-def plot_network(df, prt = False, savefig = False):
+def plot_network(df, prt = False, savefig = False, path = './res/images/connexion.webp'):
+    '''
+    plot_network(df[, prt, savefig, path])
+    ## Function
+    Plots the connectivity network between votants and candidates, this takes a lot of time and the plot is heavy.
+    prt and savefig are False by default
+    Default path is './res/images/connexion.webp'
+    ## Variables
+    df : dataset, contain a column 'SRC' with string for the votants, 'TGT' for candidates, 'VOT' for the vote (+1 if positive, -1 negative)
+    prt : bool, print the plot in the terminal /!\ heavy plot
+    savefig : bool, save or not the figure
+    path : string, path to save figure if savefig is True
+    '''
     G = nx.DiGraph()
 
     for _, row in df.iterrows():
@@ -110,5 +108,6 @@ def plot_network(df, prt = False, savefig = False):
     if prt:
         fig.show()
     if savefig :
-        fig.write_image('./Plots/connexion_graph.webp')
+        fig.write_image(path)
     return None
+
