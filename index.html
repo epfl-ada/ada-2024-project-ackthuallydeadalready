@@ -138,6 +138,7 @@
         }
         h3 {
             font-size: 2em;
+            position: center;
         }
         #hidden-image {
             display: none;
@@ -241,8 +242,8 @@
             <div class="nav-wrapper">
                 <a class="brand-logo left">Ackthually Dead Already</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down" style="margin: 1rem">
-                    <li><a href="https://epfl-ada.github.io/teaching/fall2024/cs401/"><img src="images/ada.svg" alt="AdaWebsite" width="35" height="35"></a></li>
-                    <li><a href="https://github.com/epfl-ada/ada-2024-project-ackthuallydeadalready/"><img src="images/ghub.svg" alt="GitHub" width="30" height="30"></a></li>
+                    <li><a href="https://epfl-ada.github.io/teaching/fall2024/cs401/"><img src="res/images/ada.svg" alt="AdaWebsite" width="35" height="35"></a></li>
+                    <li><a href="https://github.com/epfl-ada/ada-2024-project-ackthuallydeadalready/"><img src="res/images/ghub.svg" alt="GitHub" width="30" height="30"></a></li>
                 </li>
                 </ul>
             </div>
@@ -289,7 +290,7 @@
                         Here's a graph representing the key players and their connections:
                     </p>
 
-                    <object id="ridiculogram" type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/images/connexion.webp" height="500px" width="100%">
+                    <object id="ridiculogram" type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/images/connexion.webp" height="500px" width="100%">
                         <p>Unable to load graph</p>
                     </object>
 
@@ -306,7 +307,7 @@
                         Let's take a step back from individual interactions and look at the bigger picture. 
                     </p>
 
-                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/Evolution_of_Pass_Rates_and_votes.html" width="100%" height="500px">
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/Evolution_of_Pass_Rates_and_votes.html" width="100%" height="500px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
 
@@ -327,7 +328,7 @@
                         To dig deeper, we'll explore these trends with detailed election statistics, including pass rates, votes per election, and margin analysis. 
                     </p>
 
-                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/per_elections.html" width="100%" height="500px">
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/per_elections.html" width="100%" height="500px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
 
@@ -368,16 +369,31 @@
                 <!-- Just a tryout section -->
                 <div id="graph_test" class="section scrollspy">
                     <h2>Graph Tests</h2>
-
-                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/Plots/vote_polarity.html" width="100%" height="700px">
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/voting_beh_passrates_vot_per_elec.html" width="100%" height="1050px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/accuracy_vs_participation.html" width="100%" height="700px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/dist_pos_neg_.html" width="100%" height="700px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+                    
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/pass_rate_once_v_multiple.html" width="100%" height="700px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/vote_polarity.html" width="100%" height="700px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
                 </div>
 
+                <div id="ccl" class="section scrollspy">
+                    <h2>Conclusion</h2>
+                    <p>Text</p>
+                </div>
+
                 <!-- Footer -->
                 <div class="footer">
-                    <h1>Conclusion</h1>
-                    <p>Text</p>
                     <h3>Alexandre, Mikail, Maxence, Reinatt, Aidan</h3>
                 </div>
             </div>
@@ -399,6 +415,9 @@
                         </li>
                         <li>
                             <a class="active" href="#graph_test">Graph Tests</a>
+                        </li>
+                        <li>
+                            <a class="active" href="#ccl">Conclusion</a>
                         </li>
                     </ul>
                 </div>
