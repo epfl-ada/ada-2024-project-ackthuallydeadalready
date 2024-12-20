@@ -444,12 +444,37 @@
                 <!-- Sentiment and Topics -->
                 <div id="snt" class="section scrollspy">
                     <h2>Sentiments and Topics</h2>
+                    <p>
+                        So far, we've explored the intricate mechanisms of the Request for Adminship (RfA) process, from the evolving trends in elections to the fascinating interplay of candidates, voters, and outcomes. 
+                        But numbers and graphs can only take us so far. 
+                        To truly understand the forces shaping RfA decisions, we must dive deeper—into the sentiments and perceptions that influence the community's voice.
+                    </p>
+                    <p>
+                        What drives a voter to support or oppose a candidate? 
+                        Is it the candidate's track record, their responses to questions, or perhaps an intangible sense of trust conveyed in the discussions? 
+                        By leveraging sentiment analysis, we can analyse the nuanced emotions that guide this unique consensus-building process.
+                    </p>
                     <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/pass_rates_positive_negative.html" width="100%" height="700px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
                     <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/pass_rates_positive_negative_vader.html" width="100%" height="700px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
+                    <p>
+                        With our sentiment analysis graphs in hand, we can now explore the relationship between community sentiment and the success rates of candidates in Wikipedia's RfA process. 
+                        Using tools like HuggingFace and Vader, we categorized comments into positive, negative, and neutral sentiments and tried to visually correlated them with the outcomes of RfA elections.
+                    </p>
+                    <p>
+                        From both the HuggingFace and Vader analyses, we observe a clear trend: candidates receiving predominantly positive sentiment in the comments enjoy significantly higher success rates. 
+                        This underscores the importance of perceived trustworthiness, collegiality, and alignment with community values during the RfA process. 
+                        Positive comments often highlight qualities such as a strong track record, effective communication, and demonstrated commitment to the community—traits highly valued in administrators.
+                    </p>
+
+                    <p>
+                        On the flip side, candidates facing a higher proportion of negative sentiment comments tend to struggle in securing the community's approval. 
+                        Negative feedback often revolves around perceived lapses in judgment, contentious interactions, or a perceived lack of experience. 
+                        Interestingly, even a small number of vocal dissenters can disproportionately affect the overall sentiment score, indicating that voters place significant weight on negative opinions.
+                    </p>
                     <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/Evolution_of_Sentiments_vader.html" width="100%" height="700px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
