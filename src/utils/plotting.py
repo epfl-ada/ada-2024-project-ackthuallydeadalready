@@ -63,7 +63,79 @@ def comment_size(df):
 
 
 
-def plot_network(df, prt = False, savefig = False, path = './res/images/connexion.webp'):
+def linear_pred_influ_vot(df, acc_thr=0.95, prt=False, save=False):
+    user_accuracy = (
+        df.groupby('SRC')
+        .apply(lambda x: ((x['RES'] == x['VOT']) | (x['RES']==0) & (x['VOT']==-1)).mean())  # Proportion of correct predictions
+        .reset_index(name='accuracy')
+    )
+    
+    # Filter users with at least 95% accuracy
+    election_participation = (
+        df.drop_duplicates(subset=['SRC', 'TGT', 'YEA', 'RES'])  # Unique elections
+        .groupby('SRC')
+        .size()
+        .reset_index(name='num_elections')
+    )
+    
+    # Merge the two DataFrames
+    result = pd.merge(user_accuracy, election_participation, on='SRC')
+    influential_users = result[result['accuracy'] >= acc_thr]
+
+
+    fig = go.Figure()
+
+    # Add scatter plot for all users
+    fig.add_trace(go.Scatter(
+        x=result['num_elections'],
+        y=result['accuracy'],
+        mode='markers',
+        marker=dict(color='blue', opacity=0.6),
+        name='User Accuracy vs Elections'
+    ))
+    
+    # Add a vertical line for the median number of elections
+    median_elections = result['num_elections'].median()
+    fig.add_trace(go.Scatter(
+        x=[median_elections, median_elections],
+        y=[0, 1],
+        mode='lines',
+        line=dict(color='red', dash='dash'),
+        name='Median Elections'
+    ))
+
+    # Add a horizontal line for the accuracy threshold
+    fig.add_trace(go.Scatter(
+        x=[result['num_elections'].min(), result['num_elections'].max()],
+        y=[acc_thr, acc_thr],
+        mode='lines',
+        line=dict(color='green', dash='dash'),
+        name=f'Accuracy Threshold ({acc_thr * 100}%)',
+        hovertemplate=(
+            'SRC: %{text}<br>' +
+            'Accuracy: %{y:.2f}<br>' +
+            'Num Elections: %{x}<br>' +
+            '<extra></extra>'
+        ),
+        text=result['SRC'],  # Pass SRC column for hover text
+    ))
+
+    # Update the layout of the plot
+    fig.update_layout(
+        title='Accuracy vs Number of Elections Participated in',
+        xaxis_title='Number of Elections Participated in',
+        yaxis_title='Accuracy (Proportion of Correct Predictions)',
+        showlegend=True, template='plotly_white'
+    )
+    if prt:
+        fig.show()
+    if save:
+        fig.write_html('res/Plots/accuracy_vs_participation.html')
+    return None
+
+
+
+def plot_network(df, prt = False, savefig = False, path = './res/Plots/connexion.webp'):
     '''
     plot_network(df[, prt, savefig, path])
     ## Function
@@ -197,7 +269,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
         # Update layout
         fig.update_layout(
             title=dict(
-                text="Success Rate vs Voter Sentiment",
+                text="Success Rate vs Voter Sentiment using Vader",
                 x=0.5,
                 xanchor="center"
             ),
@@ -205,7 +277,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
                 title="Voter Sentiment"
             ),
             yaxis=dict(
-                title="Counts",
+                title="Comments Counts",
                 side="left"
             ),
             yaxis2=dict(
@@ -284,7 +356,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
         # Update layout
         fig.update_layout(
             title=dict(
-                text="Success Rate vs Voter Sentiment",
+                text="Success Rate vs Voter Sentiment using HuggingFace",
                 x=0.5,
                 xanchor="center"
             ),
@@ -292,7 +364,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
                 title="Voter Sentiment"
             ),
             yaxis=dict(
-                title="Counts",
+                title="Comment Counts",
                 side="left"
             ),
             yaxis2=dict(
@@ -387,7 +459,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
         # Update layout for dual y-axis
         fig.update_layout(
             title=dict(
-                text="Evolution of Positive and Negative Sentiments Over Years",
+                text="Evolution of Positive and Negative Sentiments Over Years using Vader",
                 x=0.5,
                 xanchor="center"
             ),
@@ -396,7 +468,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
                 tickvals=df_g.YEA,
             ),
             yaxis=dict(
-                title="Counts",
+                title="Comment Counts",
                 side="left"
             ),
             yaxis2=dict(
@@ -485,7 +557,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
         # Update layout for dual y-axis
         fig.update_layout(
             title=dict(
-                text="Evolution of Positive and Negative Sentiments Over Years",
+                text="Evolution of Positive and Negative Sentiments Over Years using HuggingFace",
                 x=0.5,
                 xanchor="center"
             ),
@@ -494,7 +566,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
                 tickvals=df_g.YEA,
             ),
             yaxis=dict(
-                title="Counts",
+                title="Comment Counts",
                 side="left"
             ),
             yaxis2=dict(
@@ -516,7 +588,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
 
 
 
-def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperation.webp'):
+def visualize_cooperation(prt=False, save_fig=False, path='./res/Plots/cooperation.webp'):
     df = pre.complete_prepro_w_sa_topics()[0]  # Assuming pre is defined elsewhere
 
     # Drop rows with NaN values in 'VOT' column
@@ -664,3 +736,98 @@ def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clu
         plt.savefig(path)
 
     return data[['sentiment', 'topic_x', 'topic_y', 'cluster']]
+
+def plot_topics_pass(data,comment=True,prt=False,savefig=False):
+    if comment:
+        topic_frequencies = data['topic_x'].value_counts()
+
+        # Select the top 10 most frequent topics
+        top_10_topics = topic_frequencies.head(10).index
+
+        # Filter the data for top 10 topics
+        filtered_data = data[data['topic_x'].isin(top_10_topics)]
+
+        # Aggregate counts of passing and failing votes by topic
+        topic_stats = filtered_data.groupby(['topic_x', 'RES']).size().unstack(fill_value=0).rename(columns={1: 'Pass', -1: 'Fail'})
+
+        # Add totals and normalize (optional)
+        topic_stats['Total'] = topic_stats.sum(axis=1)
+        topic_stats['Pass_Perc'] = topic_stats['Pass'] / topic_stats['Total']
+        topic_stats['Fail_Perc'] = topic_stats['Fail'] / topic_stats['Total']
+
+        # Reset index and sort by total frequency
+        topic_stats = topic_stats.reset_index().sort_values(by='Total', ascending=False)
+
+        # Create a grouped bar chart
+        fig = go.Figure(
+            data=[
+                go.Bar(name="Pass", x=topic_stats['topic_x'], y=topic_stats['Pass'], marker_color='teal'),
+                go.Bar(name="Fail", x=topic_stats['topic_x'], y=topic_stats['Fail'], marker_color='salmon'),
+            ],
+            layout=dict(barcornerradius=15)
+        )
+
+        # Update layout
+        fig.update_layout(
+            title="Vote Outcomes for Top 10 Topics (Ordered by Number of Occurences) for Comments",
+            xaxis_title="Topics",
+            yaxis_title="Count",
+            barmode='group',  # Group bars side-by-side
+            legend_title="Outcome",
+        )
+
+        if prt:
+            fig.show()
+        if savefig:
+            fig.write_html('./res/Plots/topics_pass_comments.html')
+    else :
+        # Clean unwanted characters from topic names
+        data['topic_y'] = data['topic_y'].str.replace(r"[{}']", "", regex=True)
+
+        # Split topics into multiple rows
+        data['topic_y'] = data['topic_y'].str.split(',')
+        data_exploded = data.explode('topic_y')
+
+        # Calculate frequencies of individual topics
+        topic_frequencies = data_exploded['topic_y'].value_counts()
+
+        # Select the top 10 most frequent topics
+        top_10_topics = topic_frequencies.head(10).index
+
+        # Filter the data for top 10 topics
+        filtered_data = data_exploded[data_exploded['topic_y'].isin(top_10_topics)]
+
+        # Aggregate counts of passing and failing votes by topic
+        topic_stats = filtered_data.groupby(['topic_y', 'RES']).size().unstack(fill_value=0).rename(columns={1: 'Pass', -1: 'Fail'})
+
+        # Add totals and normalize (optional)
+        topic_stats['Total'] = topic_stats.sum(axis=1)
+        topic_stats['Pass_Perc'] = topic_stats['Pass'] / topic_stats['Total']
+        topic_stats['Fail_Perc'] = topic_stats['Fail'] / topic_stats['Total']
+
+        # Reset index and sort by total frequency
+        topic_stats = topic_stats.reset_index().sort_values(by='Total', ascending=False)
+
+        # Create a grouped bar chart
+        fig = go.Figure(
+            data=[
+                go.Bar(name="Pass", x=topic_stats['topic_y'], y=topic_stats['Pass'], marker_color='teal'),
+                go.Bar(name="Fail", x=topic_stats['topic_y'], y=topic_stats['Fail'], marker_color='salmon'),
+            ],
+            layout=dict(barcornerradius=15)
+        )
+
+        # Update layout
+        fig.update_layout(
+            title="Vote Outcomes for Top 10 Topics (Ordered by Number of Occurences) for Discussions",
+            xaxis_title="Topics",
+            yaxis_title="Count",
+            barmode='group', 
+            legend_title="Outcome",
+        )
+
+        if prt:
+            fig.show()
+        if savefig:
+            fig.write_html('./res/Plots/topics_pass_discussions.html')
+    return None
