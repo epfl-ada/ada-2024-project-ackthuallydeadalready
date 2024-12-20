@@ -71,6 +71,21 @@ def import_RFA():
 
     return df
     
+
+def process_polarity(data):
+    vote_polarity_abs = data.groupby(by='TGT')['VOT'].value_counts(normalize=False).unstack(fill_value=0)#.head(10)#.sort_values(by = 'SRC', ascending=False)
+    vote_polarity_abs = vote_polarity_abs.rename(columns={1:'pos', 0:'neu', -1:'neg'})
+
+    vote_polarity_pct = data.groupby(by='TGT')['VOT'].value_counts(normalize=True).unstack(fill_value=0)#.head(10)#.sort_values(by = 'SRC', ascending=False)
+    vote_polarity_pct = vote_polarity_pct.rename(columns={1:'pos_pct', 0:'neu_pct', -1:'neg_pct'})
+
+    vote_polarity = pd.concat([vote_polarity_abs,vote_polarity_pct], axis=1)
+
+    data_vote_polarity = data.merge(vote_polarity, how='left', on='TGT')
+    data_vote_polarity
+    return data_vote_polarity
+
+
 #Two different Formats identified in the DAT column with typos
 #Error handling code from Stacksoverflow: "validate for multiple date / datetime formats" by 'c8999c 3f964f64'
 def validate_datetime(string, whitelist=('%H:%M, %d %B %Y', '%H:%M, %d %b %Y')):

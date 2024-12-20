@@ -14,6 +14,7 @@ import plotly.io as pio
 import src.utils.plotting as plot
 from matplotlib.lines import Line2D
 from sklearn.preprocessing import MultiLabelBinarizer
+import seaborn as sns
 
 
 def scatter_votes_year(df):
@@ -43,6 +44,151 @@ def boxplot_votes(df, src = 'SRC', vot = 'VOT'):
     plt.boxplot(df.groupby(src)[vot].count()) 
     return None
 
+
+def bar_pass_fail(unique_elections):
+    plt.bar(['RFA Pass','RFA Failed'],unique_elections.RES.value_counts(normalize=True))
+    plt.ylabel('Percentage')
+    plt.title('Percentage of Passed RFA overall')
+    return None
+
+
+def polarity_scatter(data_vote_polarity):
+    plt.figure(figsize=(8,6))
+    plt.scatter(data_vote_polarity.votes, data_vote_polarity.pos_pct)
+    return None
+
+def polarity_grid(data_vote_polarity):
+    sns.FacetGrid(data_vote_polarity, col='YEA').map(sns.regplot, 'votes','pos_pct')
+    return None
+    
+def polarity_lm(data_vote_polarity):
+    sns.lmplot(x='votes',y='pos_pct', data=data_vote_polarity, hue = 'YEA')
+    plt.xlabel("Percentage of Self Employed people [%]")
+    plt.ylabel("Income per Capita [$]")
+    #plt.ylim([10000,60000])
+    #plt.xlim([0,25])
+
+def data_by_tgt(data, print_stats = False):
+    data_by_tgt = data.groupby(by='TGT').count().sort_values(by = 'SRC', ascending=False)
+    data_by_tgt.head(20)
+
+    if print_stats:
+        election_mean = data_by_tgt.SRC.mean()
+        election_median = data_by_tgt.SRC.median()
+        election_mode = data_by_tgt.sort_values('SRC', ascending=True).SRC.quantile(q=0.5)
+        election_quant_9 = data_by_tgt.sort_values('SRC', ascending=True).SRC.quantile(q=0.9)
+
+        print('From above, we see that, on average, we have {:.1f} for an election.\
+        \nHalf of our elections will have less than {:.0f} votes.\
+        \nThe most frequent vote count for an election will be {:.0f} votes\
+        \nWe can see that the 90% of the elections have less than {:.0f} votes.\
+        '.format(election_mean, election_median, election_mode,election_quant_9))
+    else :
+        pass
+
+    fig, ax1 = plt.subplots()
+
+    counts, bins, patches = ax1.hist(data_by_tgt.SRC, bins= 200, cumulative = False, color= 'blue', label = 'Histogram')
+
+    #ax1 = plt.hist(x = data_by_tgt.SRC, bins=200, cumulative=False, label='Histogram')
+    ax1.set_xlabel('Votes')
+    ax1.set_ylabel('Frequency')
+    ax1.legend(loc= 'lower right')
+
+    cumulative = np.cumsum(counts)
+    cumulative = cumulative / cumulative[-1]
+
+    ax2 = ax1.twinx()
+
+    ax2.plot(bins[:-1], cumulative, color ='red', marker='o', label = 'cumulative distribution')
+
+    ax2.set_ylabel('Cumulative Probability')
+    ax2.legend(loc = 'upper right')
+
+    plt.title('Histogram with Cumulative Distribution') 
+    plt.show()
+    return None
+
+
+def hist_cummul_vote_pol(data_vote_polarity):
+    fig, ax1 = plt.subplots()
+
+    counts, bins, patches = ax1.hist(data_vote_polarity.groupby('TGT')['TXT'].count(), bins= 200, cumulative = False, log = True, alpha = 0.8)
+
+    #ax1 = plt.hist(x = data_by_tgt.SRC, bins=200, cumulative=False, label='Histogram')
+    ax1.set_xlabel('Number of Comments')
+    ax1.set_ylabel('Frequency (Log Scale)')
+    plt.xticks(range(0,1000,100))
+    #ax1.legend(loc= 'lower right')
+
+    cumulative = np.cumsum(counts)
+    cumulative = cumulative / cumulative[-1]
+
+    ax2 = ax1.twinx()
+
+    ax2.plot(bins[:-1], cumulative, color ='red', alpha= 0.8, marker='o', label = 'cumulative distribution')
+
+    ax2.set_ylabel('Cumulative Probability')
+    ax2.legend(loc = 'upper right')
+
+    plt.title('Histogram with Cumulative Distribution') 
+    plt.show()
+
+def violins(data_vote_polarity):
+    fig, axs = plt.subplots(4,1)
+
+    axs[0].violinplot(data_vote_polarity.groupby('TGT')['TXT'].count()[data_vote_polarity.groupby('TGT')['TXT'].count()<120+1], vert = False)
+    axs[0].set_title('90th percentile', fontsize=10)
+    axs[0].set_xlim([0,290])
+
+    axs[1].violinplot(data_vote_polarity.groupby('TGT')['TXT'].count()[data_vote_polarity.groupby('TGT')['TXT'].count()<163+1], vert = False)
+    axs[1].set_title('95th percentile', fontsize=10)
+    axs[1].set_xlim([0,290])
+
+    axs[2].violinplot(data_vote_polarity.groupby('TGT')['TXT'].count()[data_vote_polarity.groupby('TGT')['TXT'].count()<276+1], vert = False)
+    axs[2].set_title('99th percentile', fontsize=10)
+    axs[2].set_xlim([0,290])
+
+    axs[3].violinplot(data_vote_polarity.groupby('TGT')['TXT'].count()[data_vote_polarity.groupby('TGT')['TXT'].count()>276], vert = False)
+    axs[3].set_title('1% Tail', fontsize=10)
+
+    plt.tight_layout()
+    plt.show()
+    return None
+
+
+def cumulative_elec_particip(data, print_stats = False):
+    user_elec_particip = data.drop_duplicates(subset=['SRC','TGT','YEA','VOT']).groupby('SRC')['SRC'].value_counts().sort_values(ascending=False)
+
+    if print_stats :
+        print('90th percentile: {:.0f}'.format(user_elec_particip.quantile(0.90)))
+        print('90th percentile: {:.0f}'.format(user_elec_particip.quantile(0.95)))
+        print('90th percentile: {:.0f}'.format(user_elec_particip.quantile(0.99)))
+    else :
+        pass
+
+    fig, ax1 = plt.subplots()
+
+    counts, bins, patches = ax1.hist(user_elec_particip,
+                                    bins= 200, cumulative = False, log = True, alpha = 0.8)
+
+    #ax1 = plt.hist(x = data_by_tgt.SRC, bins=200, cumulative=False, label='Histogram')
+    ax1.set_xlabel('Number of Elections Participated')
+    ax1.set_ylabel('Frequency (Log Scale)')
+    #plt.xticks(range(0,1000,100))
+    #ax1.legend(loc= 'lower right')
+
+    cumulative = np.cumsum(counts)
+    cumulative = cumulative / cumulative[-1]
+
+    ax2 = ax1.twinx()
+
+    ax2.plot(bins[:-1], cumulative, color ='red', alpha= 0.8, marker='o', label = 'cumulative distribution')
+
+    ax2.set_ylabel('Cumulative Probability')
+    ax2.legend(loc = 'upper right')
+    plt.show()
+    return None
 
 
 def comment_size(df): 
@@ -131,6 +277,393 @@ def linear_pred_influ_vot(df, acc_thr=0.95, prt=False, save=False):
         fig.show()
     if save:
         fig.write_html('res/Plots/accuracy_vs_participation.html')
+    return None
+
+
+def pass_rate_once_v_mult(sing_mult_stats, prt = False, savefig = False):
+    df_g =sing_mult_stats.drop(['SING_PERC','MULT_PERC'],axis =1).transpose().reset_index().rename(columns={'index':'type', -1:'neg', 1:'pos'})
+    df_g2 =sing_mult_stats.drop(['SING','MULT'],axis =1).transpose().reset_index().rename(columns={'index':'type', -1:'neg', 1:'pos'})
+    df_g2
+
+
+    fig = go.Figure(
+        data=[
+            go.Bar(x=df_g.type, y=df_g.neg, name="Losses", text=df_g.neg, textposition='inside'),
+            go.Bar(x=df_g.type, y=df_g.pos, name="Wins", text=df_g.pos, textposition=['inside','outside']),
+            go.Bar(x=df_g.type, y=df_g.Total, name="Total", text=df_g.Total, textposition='inside'),
+        ],
+        layout=dict(
+            barcornerradius=15,
+        ),
+    )
+
+    # Overlay line graph for Pass Rate, centered on "Wins" bars
+    fig.add_trace(
+        go.Scatter(
+            x=df_g.type,  # Use the same x values as the "Wins" bar
+            y=[pr * 100 for pr in df_g2["pos"]],  # Convert pass rate to percentage
+            mode="lines+markers+text",  # Line graph with markers and text
+            name="Pass Rate",
+            text=[f"{pr*100:.1f}%" for pr in df_g2["pos"]],  # Add pass rate as percentage text
+            textposition="top center",
+            line=dict(color="red", width=2),
+            marker=dict(color="red", size=8),
+            yaxis="y2",  # Associate this trace with the secondary y-axis
+        )
+    )
+
+    # Update layout to add secondary y-axis
+    fig.update_layout(
+        title=dict(
+            text="Candidate Pass Rates: One Time vs Multiple Times",  # Chart title
+            x=0.5,  # Center the title
+            xanchor="center",  # Anchor the title at the center
+        ),
+        xaxis=dict(
+            title="Times Candidate Participated",
+            tickvals=["SING", "MULT"],  # Define custom labels
+            ticktext=["Candidate Only Once", "Candidate Multiple Times"],
+        ),
+        yaxis=dict(title="Counts", side="left"),
+        yaxis2=dict(
+            title="Pass Rate (%)",
+            overlaying="y",
+            side="right",
+            range=[0, 100],
+            tickformat=".0f%",
+        ),
+        barmode="group",
+        legend=dict(
+            title="Legend",
+            x=1.15,
+            y=0.6,
+            xanchor="right",
+            yanchor="middle",
+        ),
+    )
+
+    if prt:
+        fig.show()
+    if savefig :
+        pio.write_html(fig, file="res/Plots/pass_rates_once_v_multiple.html", auto_open=False)
+    return None
+
+
+
+def passrate_byYear_plot(passrate_by_year, prt = False, savefig = False):
+    df_g = passrate_by_year.drop(['WIN_PERC','LOSS_PERC'],axis =1)
+    df_g['TOTAL'] = df_g.sum(axis=1)
+    df_g = df_g.reset_index()
+
+    df_g2 = passrate_by_year.drop(['WIN','LOSS'],axis =1).reset_index().rename(columns={'index':'type'})
+
+    fig = go.Figure(
+        data=[
+            go.Bar(x=df_g.YEA, y=df_g.LOSS, name="LOSS", text=df_g.LOSS, textposition='inside'),
+            go.Bar(x=df_g.YEA, y=df_g.WIN, name="WIN", text=df_g.WIN, textposition=['inside','outside']),
+            go.Bar(x=df_g.YEA, y=df_g.TOTAL, name="Total", text=df_g.TOTAL, textposition='inside'),
+        ],
+        layout=dict(
+            barcornerradius=15,
+        ),
+    )
+
+    fig.update_traces(
+        textfont=dict(color="black"),  # Set text color to white
+        selector=dict(type="bar")  # Apply only to bar traces
+    )
+
+    # Overlay line graph for Pass Rate, centered on "Wins" bars
+    fig.add_trace(
+        go.Scatter(
+            x=df_g.YEA,  # Use the same x values as the "Wins" bar
+            y=[pr * 100 for pr in df_g2["WIN_PERC"]],  # Convert pass rate to percentage
+            mode="lines+markers+text",  # Line graph with markers and text
+            name="Pass Rate",
+            text=[f"{pr*100:.1f}%" for pr in df_g2["WIN_PERC"]],  # Add pass rate as percentage text
+            textposition=['bottom center',"top center","top center","top center","top center","top center","top center","top center","top center","top center","top center"],
+            line=dict(color="red", width=2),
+            marker=dict(color="red", size=8),
+            yaxis="y2",  # Associate this trace with the secondary y-axis
+        )
+    )
+
+    # Update layout to add secondary y-axis
+    fig.update_layout(
+        title=dict(
+            text="Elections and Win Rates Across The Years",  # Chart title
+            x=0.5,  # Center the title
+            xanchor="center",  # Anchor the title at the center
+        ),
+        xaxis=dict(
+            title="Year",
+            tickvals=df_g.YEA,
+            
+        ),
+        yaxis=dict(title="Counts", side="left"),
+        yaxis2=dict(
+            title="Pass Rate (%)",
+            overlaying="y",
+            side="right",
+            range=[0, 100],
+            tickformat=".0f%",
+        ),
+        barmode="group",
+        legend=dict(
+            title="Legend",
+            x=1.15,
+            y=0.6,
+            xanchor="right",
+            yanchor="middle",
+        ),
+    )
+
+
+    if prt:
+        fig.show()
+    if savefig :
+        pio.write_html(fig, file="res/Plots/Evolution_of_Pass_Rates_and_votes.html", auto_open=False)
+    return None
+
+
+def outcome_over_time(df1, prt = False, savefig = False):
+    df_g = pd.DataFrame(df1.groupby('RES')[['YEA','RES','TOT']].value_counts())
+    df_g = df_g.reset_index()
+    df_g = df_g.drop('count', axis=1)
+
+    year = 2003
+    rows = 4
+    cols = 3
+
+    # Create subplot layout with titles for each subplot
+    subplot_titles = [f"Year {year + i}" for i in range(12)]
+    subplot_titles[-1] = ""  # Hide the title of the last plot
+
+    fig = make_subplots(rows = rows, cols = cols, subplot_titles=subplot_titles)
+
+    color_pairs = [
+        ("rgba(135, 206, 250, 0.8)", "rgba(255, 165, 0, 0.8)"),  # Light blue & orange
+        ("rgba(147, 112, 219, 0.8)", "rgba(0, 255, 127, 0.8)"),  # Purple & teal
+        ("rgba(173, 255, 47, 0.8)", "rgba(255, 105, 180, 0.8)"),  # Green & pink
+    ]
+
+
+    for idx in range(0,11,1):
+
+        row = (idx // cols) + 1  # Integer division to determine row
+        col = (idx % cols) + 1   # Modulo to determine column
+
+            # Alternate colors based on the index
+        loss_color, win_color = color_pairs[idx % len(color_pairs)]
+
+        # Add Histograms for RES=1 and RES=-1
+        fig.add_trace(
+            go.Histogram(x=df_g[(df_g['YEA'] == year + idx) & (df_g['RES'] == 1)]['TOT'], 
+                        name='Win',
+                        marker_color= win_color,
+                        showlegend =False
+                        ),
+            row=row,
+            col=col,
+        )
+        fig.add_trace(
+            go.Histogram(x=df_g[(df_g['YEA'] == year + idx) & (df_g['RES'] == -1)]['TOT'], 
+                        name='Loss',
+                        marker_color = loss_color,
+                        showlegend =False
+                        ),
+            row=row,
+            col=col,
+        )
+
+
+    # Update layout with global settings
+    fig.update_layout(
+        height=1000,       # Adjust the height
+        width=1600,       # Adjust the width
+        
+    )
+
+    # Set common x-axis and y-axis labels
+    fig.update_xaxes(title_text="Total Count", row=rows, col=2)  # Bottom row x-axis
+    fig.update_yaxes(title_text="Frequency", row=2, col=1)       # First column y-axis
+
+    # Common x-axis range
+    common_xrange = [0, 350]  # Replace with the appropriate range if known
+    fig.update_xaxes(range=common_xrange)
+
+    # Common y-axis range
+    common_yrange = [0, 50]  # Replace with the appropriate range if known
+    fig.update_yaxes(range=common_yrange)
+
+    # Remove the last plot by hiding its axes
+    fig.update_xaxes(visible=False, row=rows, col=cols)
+    fig.update_yaxes(visible=False, row=rows, col=cols)
+
+    fig.update_layout(barmode='overlay', title =dict(
+            text="Distribution of Votes by Election Outcome over the Years",  # Chart title
+            x=0.5,  # Center the title
+            xanchor="center",  # Anchor the title at the center
+        )
+    )
+    fig.update_traces(opacity=0.8)
+
+    if prt:
+        fig.show()
+    if savefig :
+        pio.write_html(fig, file="Plots/dist_votes_by_elec_outcome_over_years.html", auto_open=False)
+    return None
+
+
+def voting_behaviors(df1,passrate_by_year, prt = False, savefig = False):
+    df_g = df1.drop_duplicates('elec_id')[['YEA','TOT','POS','ABS','NEG']]
+    df_g = df_g.reset_index()
+    df_g = df_g.drop('index', axis=1)
+    df_g = df_g.groupby('YEA').sum().reset_index()
+
+    df_g['POS_pct'] = (df_g['POS'] / df_g['TOT']) * 100
+    df_g['ABS_pct'] = (df_g['ABS'] / df_g['TOT']) * 100
+    df_g['NEG_pct'] = (df_g['NEG'] / df_g['TOT']) * 100
+
+
+    df_g2 = passrate_by_year.drop(['WIN','LOSS'],axis =1).reset_index().rename(columns={'index':'type'})
+
+    df_g3 = df1.drop_duplicates('elec_id').groupby('YEA')[['elec_id']].count().rename(columns={'elec_id':'no_elec'})
+    df_g3 = df_g3.reset_index()
+    df_g3['VOT_PER_ELEC'] = df_g['TOT']/df_g3['no_elec']
+
+    # Melt the DataFrame for plotting
+    df_melted = df_g.melt(
+        id_vars=['YEA', 'TOT'], 
+        value_vars=['POS', 'ABS', 'NEG'], 
+        var_name='Type', 
+        value_name='Value'
+    )
+
+    # Add percentages for text
+    df_melted['Percentage'] = df_melted.apply(
+        lambda row: (row['Value'] / df_g.loc[df_g['YEA'] == row['YEA'], 'TOT'].values[0]) * 100, axis=1
+    )
+
+    # Create the figure
+    fig = go.Figure()
+
+    # Add the bar chart with percentage text
+    for type_name in df_melted['Type'].unique():
+        filtered_df = df_melted[df_melted['Type'] == type_name]
+        fig.add_trace(
+            go.Bar(
+                x=filtered_df['YEA'],
+                y=filtered_df['Value'],
+                name=type_name,
+                text=[f"{p:.1f}%" for p in filtered_df['Percentage']],  # Use percentage as text
+                textposition='inside'
+            ),
+            
+        )
+
+
+    fig.update_traces(
+        textfont=dict(color="white"),  # Set text color to white
+        selector=dict(type="bar")  # Apply only to bar traces
+    )
+
+    # Add the scatter plot for pass rates
+    fig.add_trace(
+        go.Scatter(
+            x=df_g['YEA'],  # Use the same x values
+            y=[pr * 100 for pr in df_g2["WIN_PERC"]],  # Convert pass rate to percentage
+            mode="lines+markers+text",  # Line graph with markers and text
+            name="Pass Rate",
+            text=[f"{pr*100:.1f}%" for pr in df_g2["WIN_PERC"]],  # Add pass rate as percentage text
+            textposition='bottom center',
+            line=dict(color="red", width=2),
+            marker=dict(color="red", size=8),
+            yaxis="y2"  # Associate this trace with the secondary y-axis
+        )
+    )
+
+    fig.update_traces(
+        textfont=dict(color="red"),  # Set text color to white
+        selector=dict(type="scatter")  # Apply only to bar traces
+    )
+
+    # Configure layout
+    fig.update_layout(
+        barmode='stack',
+        title=dict(
+            text="Voting Behavior and Pass Rates over a Decade",  # Chart title
+            x=0.5,  # Center the title
+            xanchor="center",  # Anchor the title at the center
+        ),
+        xaxis=dict(
+            title="Year",
+            tickmode='linear',  # Force all ticks to be shown
+            tick0=2003,         # Starting point
+            dtick=1             # Interval of 1 year
+        ),
+        yaxis=dict(title="Total Count"),
+        yaxis2=dict(
+            title="Pass Rate (%)",
+            overlaying="y",
+            side="right",  # Place the secondary y-axis on the right
+            range=[0, 100]  # Set the y-axis scale from 0 to 100
+        ),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        height=800
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=df_g3['YEA'],  # Year for x-axis
+            y=[50000] * len(df_g3),  # Fixed y-value to align bubbles on the same line
+            mode="markers+text",  # Scatter with markers and text
+            name="Votes Per Election",
+            text=[f"{v:.0f}" for v in df_g3['VOT_PER_ELEC']],  # Display value inside the bubble
+            textposition="top center",  # Position text above the bubbles
+            marker=dict(
+                size=df_g3['VOT_PER_ELEC'] *1,  # Scale bubble size for visual impact
+                color="blue",
+                opacity=0.7
+            ),
+            hoverinfo="text+x",  # Show year and votes per election in hover
+            hovertext=[f"Year: {year}<br>Votes Per Election: {votes:.0f}" for year, votes in zip(df_g3['YEA'], df_g3['VOT_PER_ELEC'])]
+        )
+    )
+
+    # Update layout to ensure bubbles fit nicely
+    fig.update_layout(
+        title=dict(
+            text="Voting Behavior, Pass Rates, and Votes Per Election",
+            x=0.5,
+            xanchor="center"
+        ),
+        xaxis=dict(
+            title="Year",
+            tickmode='array',  # Use an array to specify which ticks to show
+            tickvals=[2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013],  # Exclude 2014
+            ticktext=["2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]  # Text for these ticks
+        ),
+        yaxis=dict(
+            title="Total Count"
+        ),
+        yaxis2=dict(
+            title="Pass Rate (%)",
+            overlaying="y",
+            side="right",
+            range=[0, 120],  # Ensure the secondary y-axis is from 0 to 100
+            tickvals=[0, 20, 40, 60, 80, 100],  # Define ticks you want to display
+            ticktext=["0%", "20%", "40%", "60%", "80%", "100%"]  # Custom text for these ticks
+        ),
+        height=1000,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        barcornerradius=10  # Apply rounded corners to the bars
+    )
+
+    if prt:
+        fig.show()
+    if savefig :
+        pio.write_html(fig, file="Plots/voting_beh_passrates_vot_per_elec.html", auto_open=False)
     return None
 
 
