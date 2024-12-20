@@ -279,7 +279,9 @@ def separate_flagged_elec_id(complete_dataset, flagged):
     return x
 
 def get_votes(complete_dataset):
+    '''
 
+    '''
     votes_by_elec = pd.DataFrame(complete_dataset.groupby('elec_id')['RES'].agg('count'))
     votes_by_elec = votes_by_elec.rename(columns={'RES':'TOT'})
     votes_by_elec = votes_by_elec.reset_index()
@@ -311,11 +313,33 @@ def get_votes(complete_dataset):
 
     return votes_by_elec, complete_dataset
 
-def preprossess_eda(data, impor = True):
+def preprossess_eda(data, prepdates = True,impor = True):
     '''
     >12min
     '''
-    df = dates_prep(data)
+    if prepdates:
+        df = dates_prep(data)
+    else :
+        df = data.copy()
+    unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list  = prep_unique_elections(df)
+    unique_elections, df = assign_elec_id(unique_elections,df)
+    unique_candidate_freq_table = calc_win_loss(unique_candidate_freq_table,unique_elections)
+    flagged_elec_id = flag_elec_id(unique_elections, df)
+    if impor :
+        file_path = 'res/data/processed_elec_data.csv'
+        df_processed = pd.read_csv(file_path)
+    else :
+        df_processed = separate_flagged_elec_id(df,flagged_elec_id)
+    return df_processed, df, unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list, flagged_elec_id
+
+def preprossess_sa_topics(data, prepdates = True,impor = True):
+    '''
+    >12min
+    '''
+    if prepdates:
+        df = dates_prep(data)
+    else :
+        df = data.copy()
     unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list  = prep_unique_elections(df)
     unique_elections, df = assign_elec_id(unique_elections,df)
     unique_candidate_freq_table = calc_win_loss(unique_candidate_freq_table,unique_elections)
