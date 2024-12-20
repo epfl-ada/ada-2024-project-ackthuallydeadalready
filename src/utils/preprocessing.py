@@ -315,7 +315,9 @@ def get_votes(complete_dataset):
 
 def preprossess_eda(data, prepdates = True,impor = True):
     '''
-    >12min
+    >12min 
+    # Long runtime for separate_flagged_elec_id (approx 25 mins for me), import csv instead
+    # # df_processed = separate_flagged_elec_id(data)
     '''
     if prepdates:
         df = dates_prep(data)
