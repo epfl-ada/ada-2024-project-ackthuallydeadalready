@@ -13,6 +13,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 import plotly.io as pio
 import src.utils.plotting as plot
 from matplotlib.lines import Line2D
+from sklearn.preprocessing import MultiLabelBinarizer
 
 
 
@@ -608,44 +609,48 @@ def visualize_cooperation(prt=False, save_fig=False, path='./res/images/cooperat
 
 
 
+
 def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clusters.webp'):
     """
     Plots clusters in a dataset using KMeans clustering, organized by sentiment, topic_x, and topic_y.
-    
-    Parameters:
-        data (pd.DataFrame): The dataset containing the data to cluster.
-        sentiment_col (str): The name of the sentiment column.
-        topic_x_col (str): The name of the topic_x column.
-        topic_y_col (str): The name of the topic_y column.
-        n_clusters (int): The number of clusters for KMeans. Default is 5.
     """
-    data=pre.complete_prepro_w_sa_topics()[0]
+    # Preprocess the data
+    data = pre.complete_prepro_w_sa_topics()[0]
 
     # Encode categorical columns
     le_sentiment = LabelEncoder()
     le_topic_x = LabelEncoder()
-    le_topic_y = LabelEncoder()
-    
+
+    data = data.dropna(subset=['topic_y'])
+
+    # Encode sentiment and topic_x as integers
     data['sentiment_encoded'] = le_sentiment.fit_transform(data['sentiment'])
     data['topic_x_encoded'] = le_topic_x.fit_transform(data['topic_x'])
-    data['topic_y_encoded'] = le_topic_y.fit_transform(data['topic_y'])
-    
+
+    # One-hot encode topic_y (multiple topics per row)
+    mlb = MultiLabelBinarizer()
+    topic_y_encoded = mlb.fit_transform(data['topic_y'])
+
+    # Convert one-hot encoding to a DataFrame and merge with original data
+    topic_y_df = pd.DataFrame(topic_y_encoded, columns=mlb.classes_, index=data.index)
+    data = pd.concat([data, topic_y_df], axis=1)
+
     # Select features for clustering
-    features = ['sentiment_encoded', 'topic_x_encoded', 'topic_y_encoded']
+    features = ['sentiment_encoded', 'topic_x_encoded'] + list(mlb.classes_)
     X = data[features]
-    
+
     # Standardize features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-    
+
     # Apply PCA for 2D visualization
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_scaled)
-    
+
     # Apply KMeans clustering
     kmeans = KMeans(n_clusters=sn_clusters, random_state=42)
     data['cluster'] = kmeans.fit_predict(X_pca)
-    
+
     # Plot clusters
     plt.figure(figsize=(10, 8))
     scatter = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=data['cluster'], cmap='viridis', s=50)
@@ -654,17 +659,10 @@ def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clu
     plt.ylabel('PCA Component 2', fontsize=14)
     plt.colorbar(scatter, label='Cluster')
     plt.grid(True, linestyle='--', alpha=0.6)
-    
-    # Add informative labels to clusters
-    data['sentiment_label'] = le_sentiment.inverse_transform(data['sentiment_encoded'])
-    data['topic_x_label'] = le_topic_x.inverse_transform(data['topic_x_encoded'])
-    data['topic_y_label'] = le_topic_y.inverse_transform(data['topic_y_encoded'])
-    
+
     if prt:
         plt.show()
     if save_fig:
         plt.savefig(path)
 
-    return data[['sentiment_label', 'topic_x_label', 'topic_y_label', 'cluster']]
-
-
+    return data[['sentiment', 'topic_x', 'topic_y', 'cluster']]
