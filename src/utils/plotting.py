@@ -664,3 +664,98 @@ def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clu
         plt.savefig(path)
 
     return data[['sentiment', 'topic_x', 'topic_y', 'cluster']]
+
+def plot_topics_pass(data,comment=True,prt=False,savefig=False):
+    if comment:
+        topic_frequencies = data['topic_x'].value_counts()
+
+        # Select the top 10 most frequent topics
+        top_10_topics = topic_frequencies.head(10).index
+
+        # Filter the data for top 10 topics
+        filtered_data = data[data['topic_x'].isin(top_10_topics)]
+
+        # Aggregate counts of passing and failing votes by topic
+        topic_stats = filtered_data.groupby(['topic_x', 'RES']).size().unstack(fill_value=0).rename(columns={1: 'Pass', -1: 'Fail'})
+
+        # Add totals and normalize (optional)
+        topic_stats['Total'] = topic_stats.sum(axis=1)
+        topic_stats['Pass_Perc'] = topic_stats['Pass'] / topic_stats['Total']
+        topic_stats['Fail_Perc'] = topic_stats['Fail'] / topic_stats['Total']
+
+        # Reset index and sort by total frequency
+        topic_stats = topic_stats.reset_index().sort_values(by='Total', ascending=False)
+
+        # Create a grouped bar chart
+        fig = go.Figure(
+            data=[
+                go.Bar(name="Pass", x=topic_stats['topic_x'], y=topic_stats['Pass'], marker_color='teal'),
+                go.Bar(name="Fail", x=topic_stats['topic_x'], y=topic_stats['Fail'], marker_color='salmon'),
+            ],
+            layout=dict(barcornerradius=15)
+        )
+
+        # Update layout
+        fig.update_layout(
+            title="Vote Outcomes for Top 10 Topics (Ordered by Frequency)",
+            xaxis_title="Topics",
+            yaxis_title="Count",
+            barmode='group',  # Group bars side-by-side
+            legend_title="Outcome",
+        )
+
+        if prt:
+            fig.show()
+        if savefig:
+            fig.write_html('./res/Plots/topics_pass_comments.html')
+    else :
+        # Clean unwanted characters from topic names
+        data['topic_y'] = data['topic_y'].str.replace(r"[{}']", "", regex=True)
+
+        # Split topics into multiple rows
+        data['topic_y'] = data['topic_y'].str.split(',')
+        data_exploded = data.explode('topic_y')
+
+        # Calculate frequencies of individual topics
+        topic_frequencies = data_exploded['topic_y'].value_counts()
+
+        # Select the top 10 most frequent topics
+        top_10_topics = topic_frequencies.head(10).index
+
+        # Filter the data for top 10 topics
+        filtered_data = data_exploded[data_exploded['topic_y'].isin(top_10_topics)]
+
+        # Aggregate counts of passing and failing votes by topic
+        topic_stats = filtered_data.groupby(['topic_y', 'RES']).size().unstack(fill_value=0).rename(columns={1: 'Pass', -1: 'Fail'})
+
+        # Add totals and normalize (optional)
+        topic_stats['Total'] = topic_stats.sum(axis=1)
+        topic_stats['Pass_Perc'] = topic_stats['Pass'] / topic_stats['Total']
+        topic_stats['Fail_Perc'] = topic_stats['Fail'] / topic_stats['Total']
+
+        # Reset index and sort by total frequency
+        topic_stats = topic_stats.reset_index().sort_values(by='Total', ascending=False)
+
+        # Create a grouped bar chart
+        fig = go.Figure(
+            data=[
+                go.Bar(name="Pass", x=topic_stats['topic_y'], y=topic_stats['Pass'], marker_color='teal'),
+                go.Bar(name="Fail", x=topic_stats['topic_y'], y=topic_stats['Fail'], marker_color='salmon'),
+            ],
+            layout=dict(barcornerradius=15)
+        )
+
+        # Update layout
+        fig.update_layout(
+            title="Vote Outcomes for Top 10 Topics in topic_y (Ordered by Frequency)",
+            xaxis_title="Topics",
+            yaxis_title="Count",
+            barmode='group', 
+            legend_title="Outcome",
+        )
+
+        if prt:
+            fig.show()
+        if savefig:
+            fig.write_html('./res/Plots/topics_pass_discussions.html')
+    return None
