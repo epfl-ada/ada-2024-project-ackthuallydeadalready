@@ -332,6 +332,9 @@ def preprossess_eda(data, prepdates = True,impor = True):
         df_processed = separate_flagged_elec_id(df,flagged_elec_id)
     return df_processed, df, unique_elections, unique_candidate_freq_table, single_runners_list, multiple_runners_list, flagged_elec_id
 
+def merge_sa_eda(data_eda,data_sa):
+    merged = data_eda.merge(data_sa[['sentiment', 'vader_neg', 'vader_neu', 'vader_pos', 'vader_compound', 'topic_x', 'topic_y']], how='left')
+    return merged
 
 def single_multi_stat(unique_elections,single_runners_list,multiple_runners_list):
     '''

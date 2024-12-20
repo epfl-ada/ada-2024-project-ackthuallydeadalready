@@ -211,7 +211,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
         if prt:
             fig.show()
         if savefig :
-            pio.write_image(fig, file="res/Plots/pass_rates_positive_negative_vader.html", auto_open=False)
+            pio.write_html(fig, file="res/Plots/pass_rates_positive_negative_vader.html", auto_open=False)
     else :
         sentiment_stats = data.groupby(['sentiment', 'RES']).size().unstack(fill_value=0)
 
