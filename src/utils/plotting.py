@@ -46,6 +46,13 @@ def boxplot_votes(df, src = 'SRC', vot = 'VOT'):
 
 
 def bar_pass_fail(unique_elections):
+    '''
+    bar_pass_fail(unique_elections)
+    ## Function
+    Plots the barplot between Succeded and Failed elections from Unique elections
+    ## Variable
+    unique_elections : dataframe
+    '''
     plt.bar(['RFA Pass','RFA Failed'],unique_elections.RES.value_counts(normalize=True))
     plt.ylabel('Percentage')
     plt.title('Percentage of Passed RFA overall')
@@ -53,15 +60,33 @@ def bar_pass_fail(unique_elections):
 
 
 def polarity_scatter(data_vote_polarity):
+    '''
+    bar_pass_fail(unique_elections)
+    ## Function
+    Plots the scatter from the data vote polarity
+    ## Variable
+    data_vote_polarity, dataframe
+    '''
     plt.figure(figsize=(8,6))
     plt.scatter(data_vote_polarity.votes, data_vote_polarity.pos_pct)
     return None
 
 def polarity_grid(data_vote_polarity):
+    '''
+    bar_pass_fail(unique_elections)
+    ## Function
+
+    ## Variable
+    '''
     sns.FacetGrid(data_vote_polarity, col='YEA').map(sns.regplot, 'votes','pos_pct')
     return None
     
 def polarity_lm(data_vote_polarity):
+    '''
+    bar_pass_fail(unique_elections)
+    ## Function
+    ## Variable
+    '''
     sns.lmplot(x='votes',y='pos_pct', data=data_vote_polarity, hue = 'YEA')
     plt.xlabel("Percentage of Self Employed people [%]")
     plt.ylabel("Income per Capita [$]")
@@ -69,6 +94,11 @@ def polarity_lm(data_vote_polarity):
     #plt.xlim([0,25])
 
 def data_by_tgt(data, print_stats = False):
+    '''
+    bar_pass_fail(unique_elections)
+    ## Function
+    ## Variable
+    '''
     data_by_tgt = data.groupby(by='TGT').count().sort_values(by = 'SRC', ascending=False)
     data_by_tgt.head(20)
 
@@ -216,7 +246,6 @@ def linear_pred_influ_vot(df, acc_thr=0.95, prt=False, save=False):
         .reset_index(name='accuracy')
     )
     
-    # Filter users with at least 95% accuracy
     election_participation = (
         df.drop_duplicates(subset=['SRC', 'TGT', 'YEA', 'RES'])  # Unique elections
         .groupby('SRC')
@@ -224,14 +253,12 @@ def linear_pred_influ_vot(df, acc_thr=0.95, prt=False, save=False):
         .reset_index(name='num_elections')
     )
     
-    # Merge the two DataFrames
     result = pd.merge(user_accuracy, election_participation, on='SRC')
     influential_users = result[result['accuracy'] >= acc_thr]
 
 
     fig = go.Figure()
 
-    # Add scatter plot for all users
     fig.add_trace(go.Scatter(
         x=result['num_elections'],
         y=result['accuracy'],
@@ -240,7 +267,6 @@ def linear_pred_influ_vot(df, acc_thr=0.95, prt=False, save=False):
         name='User Accuracy vs Elections'
     ))
     
-    # Add a vertical line for the median number of elections
     median_elections = result['num_elections'].median()
     fig.add_trace(go.Scatter(
         x=[median_elections, median_elections],
@@ -250,7 +276,6 @@ def linear_pred_influ_vot(df, acc_thr=0.95, prt=False, save=False):
         name='Median Elections'
     ))
 
-    # Add a horizontal line for the accuracy threshold
     fig.add_trace(go.Scatter(
         x=[result['num_elections'].min(), result['num_elections'].max()],
         y=[acc_thr, acc_thr],
@@ -263,10 +288,9 @@ def linear_pred_influ_vot(df, acc_thr=0.95, prt=False, save=False):
             'Num Elections: %{x}<br>' +
             '<extra></extra>'
         ),
-        text=result['SRC'],  # Pass SRC column for hover text
+        text=result['SRC'], 
     ))
 
-    # Update the layout of the plot
     fig.update_layout(
         title='Accuracy vs Number of Elections Participated in',
         xaxis_title='Number of Elections Participated in',
@@ -297,7 +321,6 @@ def pass_rate_once_v_mult(sing_mult_stats, prt = False, savefig = False):
         ),
     )
 
-    # Overlay line graph for Pass Rate, centered on "Wins" bars
     fig.add_trace(
         go.Scatter(
             x=df_g.type,  # Use the same x values as the "Wins" bar
@@ -312,7 +335,6 @@ def pass_rate_once_v_mult(sing_mult_stats, prt = False, savefig = False):
         )
     )
 
-    # Update layout to add secondary y-axis
     fig.update_layout(
         title=dict(
             text="Candidate Pass Rates: One Time vs Multiple Times",  # Chart title
@@ -369,31 +391,29 @@ def passrate_byYear_plot(passrate_by_year, prt = False, savefig = False):
     )
 
     fig.update_traces(
-        textfont=dict(color="black"),  # Set text color to white
-        selector=dict(type="bar")  # Apply only to bar traces
+        textfont=dict(color="black"),  
+        selector=dict(type="bar")  
     )
 
-    # Overlay line graph for Pass Rate, centered on "Wins" bars
     fig.add_trace(
         go.Scatter(
-            x=df_g.YEA,  # Use the same x values as the "Wins" bar
+            x=df_g.YEA,  
             y=[pr * 100 for pr in df_g2["WIN_PERC"]],  # Convert pass rate to percentage
-            mode="lines+markers+text",  # Line graph with markers and text
+            mode="lines+markers+text", 
             name="Pass Rate",
-            text=[f"{pr*100:.1f}%" for pr in df_g2["WIN_PERC"]],  # Add pass rate as percentage text
+            text=[f"{pr*100:.1f}%" for pr in df_g2["WIN_PERC"]],  
             textposition=['bottom center',"top center","top center","top center","top center","top center","top center","top center","top center","top center","top center"],
             line=dict(color="red", width=2),
             marker=dict(color="red", size=8),
-            yaxis="y2",  # Associate this trace with the secondary y-axis
+            yaxis="y2",  
         )
     )
 
-    # Update layout to add secondary y-axis
     fig.update_layout(
         title=dict(
-            text="Elections and Win Rates Across The Years",  # Chart title
-            x=0.5,  # Center the title
-            xanchor="center",  # Anchor the title at the center
+            text="Elections and Win Rates Across The Years",  
+            x=0.5,  
+            xanchor="center",  
         ),
         xaxis=dict(
             title="Year",
@@ -437,7 +457,7 @@ def outcome_over_time(df1, prt = False, savefig = False):
 
     # Create subplot layout with titles for each subplot
     subplot_titles = [f"Year {year + i}" for i in range(12)]
-    subplot_titles[-1] = ""  # Hide the title of the last plot
+    subplot_titles[-1] = "" 
 
     fig = make_subplots(rows = rows, cols = cols, subplot_titles=subplot_titles)
 
@@ -477,33 +497,29 @@ def outcome_over_time(df1, prt = False, savefig = False):
         )
 
 
-    # Update layout with global settings
+    
     fig.update_layout(
-        height=1000,       # Adjust the height
-        width=1600,       # Adjust the width
+        height=1000,       
+        width=1600,      
         
     )
 
-    # Set common x-axis and y-axis labels
-    fig.update_xaxes(title_text="Total Count", row=rows, col=2)  # Bottom row x-axis
-    fig.update_yaxes(title_text="Frequency", row=2, col=1)       # First column y-axis
+    fig.update_xaxes(title_text="Total Count", row=rows, col=2)  
+    fig.update_yaxes(title_text="Frequency", row=2, col=1)      
 
-    # Common x-axis range
-    common_xrange = [0, 350]  # Replace with the appropriate range if known
+    common_xrange = [0, 350]  
     fig.update_xaxes(range=common_xrange)
 
-    # Common y-axis range
-    common_yrange = [0, 50]  # Replace with the appropriate range if known
+    common_yrange = [0, 50]
     fig.update_yaxes(range=common_yrange)
 
-    # Remove the last plot by hiding its axes
     fig.update_xaxes(visible=False, row=rows, col=cols)
     fig.update_yaxes(visible=False, row=rows, col=cols)
 
     fig.update_layout(barmode='overlay', title =dict(
-            text="Distribution of Votes by Election Outcome over the Years",  # Chart title
-            x=0.5,  # Center the title
-            xanchor="center",  # Anchor the title at the center
+            text="Distribution of Votes by Election Outcome over the Years",
+            x=0.5,  
+            xanchor="center", 
         )
     )
     fig.update_traces(opacity=0.8)
@@ -532,7 +548,6 @@ def voting_behaviors(df1,passrate_by_year, prt = False, savefig = False):
     df_g3 = df_g3.reset_index()
     df_g3['VOT_PER_ELEC'] = df_g['TOT']/df_g3['no_elec']
 
-    # Melt the DataFrame for plotting
     df_melted = df_g.melt(
         id_vars=['YEA', 'TOT'], 
         value_vars=['POS', 'ABS', 'NEG'], 
@@ -540,12 +555,10 @@ def voting_behaviors(df1,passrate_by_year, prt = False, savefig = False):
         value_name='Value'
     )
 
-    # Add percentages for text
     df_melted['Percentage'] = df_melted.apply(
         lambda row: (row['Value'] / df_g.loc[df_g['YEA'] == row['YEA'], 'TOT'].values[0]) * 100, axis=1
     )
 
-    # Create the figure
     fig = go.Figure()
 
     # Add the bar chart with percentage text
@@ -556,7 +569,7 @@ def voting_behaviors(df1,passrate_by_year, prt = False, savefig = False):
                 x=filtered_df['YEA'],
                 y=filtered_df['Value'],
                 name=type_name,
-                text=[f"{p:.1f}%" for p in filtered_df['Percentage']],  # Use percentage as text
+                text=[f"{p:.1f}%" for p in filtered_df['Percentage']],
                 textposition='inside'
             ),
             
@@ -564,50 +577,50 @@ def voting_behaviors(df1,passrate_by_year, prt = False, savefig = False):
 
 
     fig.update_traces(
-        textfont=dict(color="white"),  # Set text color to white
-        selector=dict(type="bar")  # Apply only to bar traces
+        textfont=dict(color="white"),  
+        selector=dict(type="bar") 
     )
 
     # Add the scatter plot for pass rates
     fig.add_trace(
         go.Scatter(
             x=df_g['YEA'],  # Use the same x values
-            y=[pr * 100 for pr in df_g2["WIN_PERC"]],  # Convert pass rate to percentage
-            mode="lines+markers+text",  # Line graph with markers and text
+            y=[pr * 100 for pr in df_g2["WIN_PERC"]], 
+            mode="lines+markers+text",  
             name="Pass Rate",
-            text=[f"{pr*100:.1f}%" for pr in df_g2["WIN_PERC"]],  # Add pass rate as percentage text
+            text=[f"{pr*100:.1f}%" for pr in df_g2["WIN_PERC"]],  
             textposition='bottom center',
             line=dict(color="red", width=2),
             marker=dict(color="red", size=8),
-            yaxis="y2"  # Associate this trace with the secondary y-axis
+            yaxis="y2"  
         )
     )
 
     fig.update_traces(
-        textfont=dict(color="red"),  # Set text color to white
-        selector=dict(type="scatter")  # Apply only to bar traces
+        textfont=dict(color="red"), 
+        selector=dict(type="scatter")  
     )
 
     # Configure layout
     fig.update_layout(
         barmode='stack',
         title=dict(
-            text="Voting Behavior and Pass Rates over a Decade",  # Chart title
-            x=0.5,  # Center the title
-            xanchor="center",  # Anchor the title at the center
+            text="Voting Behavior and Pass Rates over a Decade",  
+            x=0.5,  
+            xanchor="center",  
         ),
         xaxis=dict(
             title="Year",
-            tickmode='linear',  # Force all ticks to be shown
-            tick0=2003,         # Starting point
-            dtick=1             # Interval of 1 year
+            tickmode='linear',  
+            tick0=2003,        
+            dtick=1            
         ),
         yaxis=dict(title="Total Count"),
         yaxis2=dict(
             title="Pass Rate (%)",
             overlaying="y",
-            side="right",  # Place the secondary y-axis on the right
-            range=[0, 100]  # Set the y-axis scale from 0 to 100
+            side="right",  
+            range=[0, 100]  
         ),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         height=800
@@ -615,23 +628,23 @@ def voting_behaviors(df1,passrate_by_year, prt = False, savefig = False):
 
     fig.add_trace(
         go.Scatter(
-            x=df_g3['YEA'],  # Year for x-axis
-            y=[50000] * len(df_g3),  # Fixed y-value to align bubbles on the same line
-            mode="markers+text",  # Scatter with markers and text
+            x=df_g3['YEA'],  
+            y=[50000] * len(df_g3),  
+            mode="markers+text",  
             name="Votes Per Election",
-            text=[f"{v:.0f}" for v in df_g3['VOT_PER_ELEC']],  # Display value inside the bubble
-            textposition="top center",  # Position text above the bubbles
+            text=[f"{v:.0f}" for v in df_g3['VOT_PER_ELEC']],  
+            textposition="top center",  
             marker=dict(
-                size=df_g3['VOT_PER_ELEC'] *1,  # Scale bubble size for visual impact
+                size=df_g3['VOT_PER_ELEC'] *1, 
                 color="blue",
                 opacity=0.7
             ),
-            hoverinfo="text+x",  # Show year and votes per election in hover
+            hoverinfo="text+x", 
             hovertext=[f"Year: {year}<br>Votes Per Election: {votes:.0f}" for year, votes in zip(df_g3['YEA'], df_g3['VOT_PER_ELEC'])]
         )
     )
 
-    # Update layout to ensure bubbles fit nicely
+    # Update bubbles 
     fig.update_layout(
         title=dict(
             text="Voting Behavior, Pass Rates, and Votes Per Election",
@@ -640,9 +653,9 @@ def voting_behaviors(df1,passrate_by_year, prt = False, savefig = False):
         ),
         xaxis=dict(
             title="Year",
-            tickmode='array',  # Use an array to specify which ticks to show
-            tickvals=[2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013],  # Exclude 2014
-            ticktext=["2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]  # Text for these ticks
+            tickmode='array', 
+            tickvals=[2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013],  
+            ticktext=["2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013"]  
         ),
         yaxis=dict(
             title="Total Count"
@@ -651,13 +664,13 @@ def voting_behaviors(df1,passrate_by_year, prt = False, savefig = False):
             title="Pass Rate (%)",
             overlaying="y",
             side="right",
-            range=[0, 120],  # Ensure the secondary y-axis is from 0 to 100
-            tickvals=[0, 20, 40, 60, 80, 100],  # Define ticks you want to display
-            ticktext=["0%", "20%", "40%", "60%", "80%", "100%"]  # Custom text for these ticks
+            range=[0, 120],  
+            tickvals=[0, 20, 40, 60, 80, 100],  
+            ticktext=["0%", "20%", "40%", "60%", "80%", "100%"]  
         ),
         height=1000,
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        barcornerradius=10  # Apply rounded corners to the bars
+        barcornerradius=10 
     )
 
     if prt:
@@ -686,20 +699,17 @@ def plot_network(df, prt = False, savefig = False, path = './res/Plots/connexion
     for _, row in df.iterrows():
         G.add_edge(row['SRC'], row['TGT'], weight=row['VOT'])
 
-    pos = nx.spring_layout(G)  # or nx.circular_layout(G)
+    pos = nx.spring_layout(G) 
 
-    # Extract node positions
     node_x = [pos[node][0] for node in G.nodes]
     node_y = [pos[node][1] for node in G.nodes]
 
-    # Add nodes to the plot
     node_trace = go.Scatter(
         x=node_x, y=node_y,
         mode='markers+text',
         marker=dict(size=10, color='gray'),
     )
 
-    # Add edges to the plot
     edge_x = []
     edge_y = []
     edge_colors = []
@@ -717,7 +727,6 @@ def plot_network(df, prt = False, savefig = False, path = './res/Plots/connexion
         mode='lines'
     )
 
-    # Create the final figure
     fig = go.Figure(data=[edge_trace, node_trace],
                 layout=go.Layout(
                     title='User Connections',
@@ -743,11 +752,9 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
 
         sentiment_stats_vader = data.groupby(['sentiment_vader', 'RES']).size().unstack(fill_value=0)
 
-        # Calculate total and success rate by sentiment
         sentiment_stats_vader['Total'] = sentiment_stats_vader.sum(axis=1)
         sentiment_stats_vader['Pass Rate'] = sentiment_stats_vader[1] / sentiment_stats_vader['Total']
 
-        # Format for plotting
         df_g = sentiment_stats_vader[[1, -1, 'Total']].reset_index().rename(columns={1: 'pos', -1: 'neg'})
         df_g2 = sentiment_stats_vader[['Pass Rate']].reset_index()
 
@@ -784,11 +791,10 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
             layout=dict(bargap=0.2,barcornerradius=15)
         )
 
-        # Overlay line graph for Pass Rate
         fig.add_trace(
             go.Scatter(
                 x=df_g2['sentiment_vader'],
-                y=df_g2['Pass Rate'] * 100,  # Convert to percentage
+                y=df_g2['Pass Rate'] * 100,  
                 mode="lines+markers+text",
                 name="Pass Rate",
                 text=[f"{pr * 100:.1f}%" for pr in df_g2["Pass Rate"]],
@@ -799,7 +805,6 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
             )
         )
 
-        # Update layout
         fig.update_layout(
             title=dict(
                 text="Success Rate vs Voter Sentiment using Vader",
@@ -830,7 +835,6 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
     else :
         sentiment_stats = data.groupby(['sentiment', 'RES']).size().unstack(fill_value=0)
 
-        # Calculate total and success rate by sentiment
         sentiment_stats['Total'] = sentiment_stats.sum(axis=1)
         sentiment_stats['Pass Rate'] = sentiment_stats[1] / sentiment_stats['Total']
 
@@ -871,11 +875,10 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
             layout=dict(bargap=0.2,barcornerradius=15)
         )
 
-        # Overlay line graph for Pass Rate
         fig.add_trace(
             go.Scatter(
                 x=df_g2['sentiment'],
-                y=df_g2['Pass Rate'] * 100,  # Convert to percentage
+                y=df_g2['Pass Rate'] * 100, 
                 mode="lines+markers+text",
                 name="Pass Rate",
                 text=[f"{pr * 100:.1f}%" for pr in df_g2["Pass Rate"]],
@@ -886,7 +889,6 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
             )
         )
 
-        # Update layout
         fig.update_layout(
             title=dict(
                 text="Success Rate vs Voter Sentiment using HuggingFace",
@@ -929,14 +931,11 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
             'NEGATIVE': data[data['sentiment_vader'] == 'NEGATIVE'].groupby('YEA')['RES'].count(),
         }).fillna(0)
 
-        # Add percentages
         sentiment_by_year['POSITIVE_PERC'] = sentiment_by_year['POSITIVE'] / sentiment_by_year.sum(axis=1)
         sentiment_by_year['NEGATIVE_PERC'] = sentiment_by_year['NEGATIVE'] / sentiment_by_year.sum(axis=1)
 
-        # Reset index for plotting
         sentiment_by_year = sentiment_by_year.reset_index()
 
-        # Data for bar and line plots
         df_g = sentiment_by_year.drop(['POSITIVE_PERC', 'NEGATIVE_PERC'], axis=1)
         df_g['TOTAL'] = df_g.sum(axis=1)
 
@@ -974,7 +973,6 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
             ),
         )
 
-        # Overlay line graph for Positive Sentiment Rate
         fig.add_trace(
             go.Scatter(
                 x=df_g2.YEA,
@@ -989,7 +987,6 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
             )
         )
 
-        # Update layout for dual y-axis
         fig.update_layout(
             title=dict(
                 text="Evolution of Positive and Negative Sentiments Over Years using Vader",
@@ -1021,20 +1018,16 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
             pio.write_html(fig, file="res/Plots/Evolution_of_Sentiments_vader.html", auto_open=False)
 
     else :
-        # Compute sentiment stats by year
         sentiment_by_year = pd.DataFrame({
             'POSITIVE': data[data['sentiment'] == 'POSITIVE'].groupby('YEA')['RES'].count(),
             'NEGATIVE': data[data['sentiment'] == 'NEGATIVE'].groupby('YEA')['RES'].count(),
         })
 
-        # Add percentages
         sentiment_by_year['POSITIVE_PERC'] = sentiment_by_year['POSITIVE'] / sentiment_by_year.sum(axis=1)
         sentiment_by_year['NEGATIVE_PERC'] = sentiment_by_year['NEGATIVE'] / sentiment_by_year.sum(axis=1)
 
-        # Reset index for plotting
         sentiment_by_year = sentiment_by_year.reset_index()
 
-        # Data for bar and line plots
         df_g = sentiment_by_year.drop(['POSITIVE_PERC', 'NEGATIVE_PERC'], axis=1)
         df_g['TOTAL'] = df_g.sum(axis=1)
 
@@ -1072,11 +1065,10 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
             ),
         )
 
-        # Overlay line graph for Positive Sentiment Rate
         fig.add_trace(
             go.Scatter(
                 x=df_g2.YEA,
-                y=df_g2.POSITIVE_PERC * 100,  # Convert to percentage
+                y=df_g2.POSITIVE_PERC * 100, 
                 mode="lines+markers+text",
                 name="Positive Sentiment Rate",
                 text=[f"{pr*100:.1f}%" for pr in df_g2["POSITIVE_PERC"]],
@@ -1087,7 +1079,6 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
             )
         )
 
-        # Update layout for dual y-axis
         fig.update_layout(
             title=dict(
                 text="Evolution of Positive and Negative Sentiments Over Years using HuggingFace",
@@ -1122,53 +1113,41 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
 
 
 def visualize_cooperation(prt=False, save_fig=False, path='./res/Plots/cooperation.webp'):
-    df = pre.complete_prepro_w_sa_topics()[0]  # Assuming pre is defined elsewhere
+    df = pre.complete_prepro_w_sa_topics()[0]  
 
-    # Drop rows with NaN values in 'VOT' column
     df = df.dropna(subset=['VOT'])
 
     required_columns = ['SRC', 'TGT', 'VOT', 'YEA', 'DAT', 'Attempt']
     if not all(col in df.columns for col in required_columns):
         raise ValueError(f"Dataframe must contain columns: {', '.join(required_columns)}")
 
-    # Ensure the 'DAT' column is in datetime format
     df['DAT'] = pd.to_datetime(df['DAT'])
 
-    # Drop the original TIM column, as it's now merged into DAT
     df = df.drop(columns=['TIM'])
 
-    # Sort by DAT to ensure the most recent vote is retained
     df = df.sort_values(by='DAT').drop_duplicates(subset=['SRC', 'TGT', 'Attempt'], keep='last')
 
-    # Get unique years
     years = sorted(df['YEA'].unique())
 
-    # Create a grid of subplots: 3 columns, enough rows to cover all years
-    n_cols = 3
-    n_rows = -(-len(years) // n_cols)  # Ceiling division to determine number of rows
 
-    # Create a figure and axes for the subplots
+    n_cols = 3
+    n_rows = -(-len(years) // n_cols)  
+
     fig, axes = plt.subplots(n_rows, n_cols, figsize=(15, 3 * n_rows), sharex=True, sharey=True)
 
-    # Flatten the axes array in case the number of rows and columns don't match exactly
     axes = axes.flatten()
 
-    # Loop through each year and plot the graph on the corresponding subplot
     for idx, year in enumerate(years):
         print(year, '\n')
         ax = axes[idx]
         
-        # Filter data for the current year
         year_data = df[df['YEA'] == year]
 
-        # Initialize a graph for this year
         G = nx.Graph()
 
-        # Add nodes explicitly (add only unique SRC values)
         for src in year_data['SRC']:
             G.add_node(src)
 
-        # Group by TGT and VOT, and for each group, create edges between the SRC values
         for (tgt, vot), group in year_data.groupby(['TGT', 'VOT']):
             for i, row1 in group.iterrows():
                 for j, row2 in group.iterrows():
@@ -1176,31 +1155,24 @@ def visualize_cooperation(prt=False, save_fig=False, path='./res/Plots/cooperati
                         color = {1: 'red', -1: 'green', 0: 'blue'}.get(row1['VOT'], 'black')
                         G.add_edge(row1['SRC'], row2['SRC'], color=color)
 
-        # Get the edge colors based on 'VOT'
         edge_colors = [G[u][v]['color'] for u, v in G.edges()]
 
-        # Plot the graph for the current year on the corresponding subplot
-        pos = nx.spring_layout(G, k=0.5)  # Adjust the layout for compactness
+        pos = nx.spring_layout(G, k=0.5)  
         nx.draw(G, pos, with_labels=False, node_color='none', edge_color=edge_colors, width=1, node_size=10, 
                 font_size=8, ax=ax, node_shape='o', linewidths=2, edgecolors='black')  # Reduced node size
 
-        # Set the title for each subplot (year)
         ax.set_title(f"Year {year}")
 
-        # Create a custom legend for the VOT values
         legend_labels = {1: 'VOT=1', -1: 'VOT=-1', 0: 'VOT=0'}
         handles = [Line2D([0], [0], color='red', lw=3, label='VOT=1'),
                    Line2D([0], [0], color='green', lw=3, label='VOT=-1'),
                    Line2D([0], [0], color='blue', lw=3, label='VOT=0')]
 
-        # Add the legend to the plot
         ax.legend(handles=handles, title="Vote (VOT)", loc='upper left')
 
-    # Remove any extra subplots (axes that are not used)
     for i in range(len(years), len(axes)):
         fig.delaxes(axes[i])
 
-    # Adjust the layout for better spacing
     plt.tight_layout()
 
     if prt:
@@ -1217,7 +1189,6 @@ def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clu
     """
     Plots clusters in a dataset using KMeans clustering, organized by sentiment, topic_x, and topic_y.
     """
-    # Preprocess the data
     data = pre.complete_prepro_w_sa_topics()[0]
 
     # Encode categorical columns
@@ -1238,19 +1209,15 @@ def plot_clusters(sn_clusters=5, prt=False, save_fig=False, path='./res/Plot/clu
     topic_y_df = pd.DataFrame(topic_y_encoded, columns=mlb.classes_, index=data.index)
     data = pd.concat([data, topic_y_df], axis=1)
 
-    # Select features for clustering
     features = ['sentiment_encoded', 'topic_x_encoded'] + list(mlb.classes_)
     X = data[features]
 
-    # Standardize features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Apply PCA for 2D visualization
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_scaled)
 
-    # Apply KMeans clustering
     kmeans = KMeans(n_clusters=sn_clusters, random_state=42)
     data['cluster'] = kmeans.fit_predict(X_pca)
 
@@ -1300,7 +1267,6 @@ def plot_topics_pass(data,comment=True,prt=False,savefig=False):
             layout=dict(barcornerradius=15)
         )
 
-        # Update layout
         fig.update_layout(
             title="Vote Outcomes for Top 10 Topics (Ordered by Number of Occurences) for Comments",
             xaxis_title="Topics",
@@ -1314,34 +1280,25 @@ def plot_topics_pass(data,comment=True,prt=False,savefig=False):
         if savefig:
             fig.write_html('./res/Plots/topics_pass_comments.html')
     else :
-        # Clean unwanted characters from topic names
         data['topic_y'] = data['topic_y'].str.replace(r"[{}']", "", regex=True)
 
-        # Split topics into multiple rows
         data['topic_y'] = data['topic_y'].str.split(',')
         data_exploded = data.explode('topic_y')
 
-        # Calculate frequencies of individual topics
         topic_frequencies = data_exploded['topic_y'].value_counts()
 
-        # Select the top 10 most frequent topics
         top_10_topics = topic_frequencies.head(10).index
 
-        # Filter the data for top 10 topics
         filtered_data = data_exploded[data_exploded['topic_y'].isin(top_10_topics)]
 
-        # Aggregate counts of passing and failing votes by topic
         topic_stats = filtered_data.groupby(['topic_y', 'RES']).size().unstack(fill_value=0).rename(columns={1: 'Pass', -1: 'Fail'})
 
-        # Add totals and normalize (optional)
         topic_stats['Total'] = topic_stats.sum(axis=1)
         topic_stats['Pass_Perc'] = topic_stats['Pass'] / topic_stats['Total']
         topic_stats['Fail_Perc'] = topic_stats['Fail'] / topic_stats['Total']
 
-        # Reset index and sort by total frequency
         topic_stats = topic_stats.reset_index().sort_values(by='Total', ascending=False)
 
-        # Create a grouped bar chart
         fig = go.Figure(
             data=[
                 go.Bar(name="Pass", x=topic_stats['topic_y'], y=topic_stats['Pass'], marker_color='teal'),
@@ -1350,7 +1307,6 @@ def plot_topics_pass(data,comment=True,prt=False,savefig=False):
             layout=dict(barcornerradius=15)
         )
 
-        # Update layout
         fig.update_layout(
             title="Vote Outcomes for Top 10 Topics (Ordered by Number of Occurences) for Discussions",
             xaxis_title="Topics",

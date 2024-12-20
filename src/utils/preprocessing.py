@@ -82,7 +82,6 @@ def process_polarity(data):
     vote_polarity = pd.concat([vote_polarity_abs,vote_polarity_pct], axis=1)
 
     data_vote_polarity = data.merge(vote_polarity, how='left', on='TGT')
-    data_vote_polarity
     return data_vote_polarity
 
 
