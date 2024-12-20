@@ -261,15 +261,17 @@
                     <h2>Public sentiments on Wikipedia admins and their consequences in RfA elections: A deep dive into voting patterns, community behavior, and sentiment trends shaping the Wikipedia admin landscape.</h2>
 
                     <p>
-                        Imagine a world where trust isn't just a virtue but a cornerstone of governance. 
-                        On Wikipedia, the administrators, entrusted with safeguarding the platform's integrity, embark on a journey to earn this trust through a social consensus process called Request for Adminship (RfA). 
-                        Unlike the conventional voting systems we encounter in politics or workplaces, the RfA is more than just a tally of yeses and nos. 
-                        It's a nuanced conversation where every comment, question, and response shapes the community's decision.
+                        Imagine a world where trust is not just a virtue but also a cornerstone of governance. 
+                        On Wikipedia, administrators, users entrusted with maintaining the platform's integrity, embark on a journey 
+                        to earn this trust through a social consensus process called Request for Adminship (RfA). 
+                        Unlike the conventional voting systems we encounter in politics or workplaces, the RfA is more than just 
+                        a tally of yeses and nos. It's a nuanced conversation where each and every comment, question, and response 
+                        shapes the community's decision.
                     </p>
 
                     <p>
-                        Now, what if we could peek into this dynamic process, unraveling the sentiments, themes, and turning points that sway opinions? Welcome to our project. 
-                        By combining the art of sentiment analysis with cutting-edge natural language processing, we aim to decode the fabric of consensus-building in Wikipedia's admin elections. 
+                        Now, what if we could peek into this dynamic process, unraveling some of the sentiments, themes, and turning points that sway opinions? Welcome to our project. 
+                        By combining the art of sentiment analysis with cutting-edge natural language processing, we aim to decode the fabric of consensus-building within Wikipedia's admin elections. 
                         From policy stances to communication skills, we will uncover the topics that ignite the most spirited debates.
                     </p>
 
@@ -296,8 +298,8 @@
 
                     <p>
                         Okay, we admit it—this graph looks a bit chaotic! Let us break it down for you!
-                        Light blue nodes represent the participants and candidates, including voters who express their opinions through comments and votes, and each line represents a vote, with green lines for positive votes and red lines for negative votes.
-                        Behind every line lies a wealth of discussion and debate, as users deliberate on the candidate's qualifications. 
+                        Light blue nodes are the participants and candidates, including voters who express their opinions through comments and votes, and each line represents a vote, with green lines for positive votes and red lines for negative votes.
+                        Behind every line hides a wealth of discussion and debate, as users deliberate on the candidate's qualifications. 
                         These discussions, available on specific Wikipedia pages, are at the heart of the RfA process, shaping the opinions that drive each vote.
                     </p>
 
@@ -367,21 +369,21 @@
                     </div>
 
                     <p>
-                        Before looking at the RFA elections data, let's quickly talk about Wikipedia. It was launched as a free-content encyclopedia which created 
-                        and maintained articles through a community of volunteers. The platform went live when dot.com bubble burst and maintained relevance till today.
+                        Before looking at the RFA elections data, let's talk a bit about Wikipedia. It was launched as a free-content encyclopedia that created 
+                        and maintained articles thanks to a community of volunteers. The platform went live when dot.com bubble burst and still maintains relevance today.
                         The project was interesting because of a simple mission to create freely accessible articles on topics. This community needs administrators who
-                        are willing to devote their free time to maintain the common database. 
+                        are willing to devote their free time to maintaining the common database. 
                     </p>
                     <p>
                         In the graph, we observe that there was a meteoric rise in RFA elections till 2007 which perhaps reflects the rising popularity of the platform
                         in the early 2000s. RFA elections peaked in 2007 during the Global Financial Crisis. Although, we can't say for sure, but perhaps the economic crisis
                         was an inflection point for volunteers as adminship requires a regular commitment. If admins to do not contribute regularly, they can be recalled 
-                        (de-adminship). To put bluntly, volunteering became a luxury. Irrespective of the cause, we see that RFA elections consistently decline since the peak.
-                        The decay persists to today. If we look at net additions/removals (table above), we notice that 2011 onwards, we see that removals dominate the additions
+                        (de-adminship). To put it bluntly, volunteering became a luxury. Irrespective of the cause, we see that RFA elections consistently decline since the peak.
+                        The decay persists even today. If we look at net additions/removals (table above), we notice that from 2011 onwards, removals dominate the additions
                         after the passing of the 2011 reform wich automatically desysop (remove) admins who aren't active for a year. 
                     </p>
                     <p>
-                        Another interesting aspect are the pass rates. We see that they are quite high in the early years which reflect the hyper-growth stage which needs to
+                        Another interesting aspect are the pass rates. We see that they are quite high in the early years, reflecting the hyper-growth stage which needs to
                         increase the ranks of the admins to meet the growing admin needs. As demand cools, we can see that pass rates stabilize between 35-50% which reflects
                         a more selective administration criteria. The 2011 reform changes the election dynamics for the following years. The trend is not very visible in this
                         graph, but if we look at a wikiepdia author's work, we see that the trend post-2011, we see that RFA passrates increased to 60-70%.
@@ -482,7 +484,18 @@
                     <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/Evolution_of_Sentiments.html" width="100%" height="700px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
-                    
+                    <p>
+                        Voter sentiment seems to be pretty much constant. We can see here that whether according to huggingface or vader,
+                        except for a few year before 2006, positive sentiment rate is relatively stable between 75 and 80%. That is 
+                        probably due to the issues and the quality of the candidates being more or less constant in the eyes of the 
+                        community. Another aspect of the community that has a huge impact on RFAs is what we could call engagement. 
+                        Whereas the positive comment rate is usually the same, the total number of comments, presumably a good 
+                        representation of how interested users are in elections or how important RFAs are to the community, is always 
+                        changing, with an about 9 fold increase between 2003 and 2006-7, followed by a slower descent back down to 2003 
+                        levels by 2013. This means that elections are not necessarily comparable to one another, as some time periods 
+                        see much more engagement by users.
+                    </p>
+
                     <p>
                         The RfA process is more than just a vote; it's a conversation. 
                         Every comment, question, and response shapes the community's decision. 
@@ -639,17 +652,6 @@
                     </object>
 
                     <p>
-                        Top discussion topic based on pass and fails of the elections:
-                    </p>
-                    
-                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/topics_pass_comments.html" width="100%" height="700px">
-                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
-                    </object>
-                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/topics_pass_discussions.html" width="100%" height="700px">
-                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
-                    </object>
-
-                    <p>
                         THese topics are quite interesting as they show the most common topics that are discussed in the RfA process. The topics itself are sometimes too generic to be understood easily.
                         However, if we take a bit of a deeper look, we would understand the significance of these topics. For example, topics such as contributions, editing, conflicts, and vandalism show
                         the most common topics that are discussed in the RfA process. These topics show what the community is interested in and what they are looking for in an admin. We can also see how both the
@@ -672,6 +674,34 @@
                         These kinds of insight are what makes the topic analysis within a discussion so interesting. If we dig deeper, it might be possible to understand other qualifications that is important in certain
                         election years. This information might prove useful for people who are trying to win the election.
                     </p>
+
+                    <p>
+                        Top discussion topic based on pass and fails of the elections:
+                    </p>
+                    
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/topics_pass_comments.html" width="100%" height="700px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+                    <p>
+                        If we look at the top 10 most frequent up to 3 word topics of the comments voters write when they take a vote, 
+                        we can see that most of them simply echo their vote and are simply about either support or opposition to a 
+                        nominee. However, funnily enough, we can also clearly see that a good few hundred comments are about fonts or
+                        margin style. Clearly, some of the people participating in elections have very different reasons for voting the 
+                        way they do. In Addition, most topics usually coincide with a higher pass than fail rate, meaning people probably 
+                        usually write something positive when they take the time to do it.
+                    </p>
+                    <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/topics_pass_discussions.html" width="100%" height="700px">
+                        <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
+                    </object>
+                    <p>
+                        If we now look at the topics of the questions and answers to and by candidates, it is pretty obvious that the 
+                        conversation centers more around the users contributions to Wikipedia, how much they plan to help out with 
+                        chores and how they reacted to different unexpected situations. In short, there is a mismatch between the reasons
+                        people vote the way they do and what issues are tackled during discussion with candidates 
+                        during their RFA.
+                    </p>
+                  
+
                 </div>
 
 
@@ -679,21 +709,45 @@
                 <!-- Community and Relations -->
                 <div id="cr" class="section scrollspy">
                     <h2>Community Relations</h2>
+                    <p>
+                        Now that we know a bit more about what are the important issues, for the community and the candidates,
+                        what kind of voting dynamics ultimately result from this entire process?
+                    </p>
 
                     <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/cooperation.webp" width="100%" height="700px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
 
+                    <p>
+                        We have seen why people feel and vote the way they do, what about how divided the community is? Graphs of 
+                        networks where all the people who voted the same way for a specific election during a specific year show a 
+                        few interesting trends. First, while we initially have very isolated clusters, as time goes on, the graph 
+                        becomes more connected, which probably means people start to intervene in RFAs that are not only by their 
+                        friends and care more about the community as a whole. But we also see that we go from a very even graph to 
+                        one that is very dense in the middle, which points to a situation where many people within the community 
+                        collaborate with just a few people. In short, we start to observe centralisation and the emergence of kingmakers.
+                    </p>
+
                     <object type="text/html" data="https://epfl-ada.github.io/ada-2024-project-ackthuallydeadalready/res/Plots/accuracy_vs_participation.html" width="100%" height="700px">
                         <p>Unable to load the included file. Please ensure the path is correct and the file is accessible.</p>
                     </object>
+
+                    <p>
+                        Another way to observe that a few people seem to hold a lot of sway is to look at voting accuracy, or how often 
+                        people have voted for or against a candidate and the person has either successfully been promoted or been 
+                        rejected. It clearly shows that some people have voted in quite a few elections and been more than 95% accurate 
+                        over their voting career, which is pretty impressive past a few.
+                    </p>
                     
                 </div>
 
                 <!-- Conclusion -->
                 <div id="ccl" class="section scrollspy">
                     <h2>Conclusion</h2>
-                    <p>Text</p>
+                    <p>
+                        Congratulations!! You now know (almost) everything about the way wikipedia RFA elections go, from how the amount 
+                        of voting changes over the years to how sentiment and topic of discussion affects a candidates chances.
+                    </p>
                 </div>
 
                 <!-- Footer -->
