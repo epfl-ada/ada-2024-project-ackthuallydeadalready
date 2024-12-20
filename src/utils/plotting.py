@@ -205,7 +205,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
                 title="Voter Sentiment"
             ),
             yaxis=dict(
-                title="Counts",
+                title="Comments Counts",
                 side="left"
             ),
             yaxis2=dict(
@@ -292,7 +292,7 @@ def plot_sentiment_byPass(data, vader=False, prt = False, savefig = False):
                 title="Voter Sentiment"
             ),
             yaxis=dict(
-                title="Counts",
+                title="Comment Counts",
                 side="left"
             ),
             yaxis2=dict(
@@ -396,7 +396,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
                 tickvals=df_g.YEA,
             ),
             yaxis=dict(
-                title="Counts",
+                title="Comment Counts",
                 side="left"
             ),
             yaxis2=dict(
@@ -494,7 +494,7 @@ def plot_sentiments_byYear(data, vader=False, prt = False, savefig = False):
                 tickvals=df_g.YEA,
             ),
             yaxis=dict(
-                title="Counts",
+                title="Comment Counts",
                 side="left"
             ),
             yaxis2=dict(
