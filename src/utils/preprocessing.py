@@ -376,7 +376,8 @@ def passrate_byYear(df1):
 
     return passrate_by_year
 
-def complete_prepro_w_sa_topics(df_path = "res/data/rfa_bert_vader_topic.csv", qs_path = 'res/data/all_questions_and_answers_w_topic.csv'):
+def complete_prepro_w_sa_topics(df_path = "res/data/rfa_bert_vader_topic.csv", 
+    qs_path = 'res/data/all_questions_and_answers_w_topic.csv', thr_tp=True):
     '''
     prep_unique_elections(data_original)
     ## Function
@@ -389,10 +390,11 @@ def complete_prepro_w_sa_topics(df_path = "res/data/rfa_bert_vader_topic.csv", q
     qs['Question'] = qs['Question'].astype(str)
     qs['Answer'] = qs['Answer'].astype(str)
     qs['User'] = qs['User'].astype(str)
-    threshold = 10
-    topic_counts = qs['topic'].value_counts()
-    valid_topics = topic_counts[topic_counts >= threshold].index
-    qs = qs[qs['topic'].isin(valid_topics)]
+    if thr_tp:
+        threshold = 10
+        topic_counts = qs['topic'].value_counts()
+        valid_topics = topic_counts[topic_counts >= threshold].index
+        qs = qs[qs['topic'].isin(valid_topics)]
     df=pd.read_csv(df_path, index_col=0)
     df['TXT'] = df['TXT'].astype(str)
     df['DAT'] = df['DAT'].astype(str)
