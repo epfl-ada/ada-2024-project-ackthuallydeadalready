@@ -56,7 +56,7 @@ With our semantic analysis, we will test prediction models for voting patterns g
     - CART Decision Tree (linear & non-linear relationships, Medium interpretability) 
     - Logit Model (Linear relationship, Maximum interpretability) 
 
-# Timeline
+# Timeline (Planned)
 - 15.11 - Submitted Milestone P2 (START)
 - 29.11 - HW2 Due
 - 29.11 - Task 1: Scraping and preprocessing of all raw data finished
@@ -73,13 +73,38 @@ With our semantic analysis, we will test prediction models for voting patterns g
     - subtasks: story telling, visualizing insights, chart curation
 - 20.12 - Submission Milestone P3 (END)
 
-# Organization
+# Organization (Planned)
 - Task 1 - Aidan Maxence Reinatt
 - Task 2 - Mikail Alexandre Reinatt
 - Task 3 - Mikail Maxence Reinatt
 - Task 4 - Aidan Alexandre
 - Task 5 - Maxence Alexandre
 - Task 6 - Mikail Aidan
+
+# Accurate Tasks Performed
+- Task 1: Scraping finished
+    - subtasks: data-scraping, joining datasets, tokenization of comments, cleaning tokens' data (stopwords and punctuation)
+- Task 2: Exploratory Data Analysis finished
+    - subtasks: describe preliminary results and hypotheses with visual evidence and summary statistics
+- Task 2.5: EDA on Sentiment Analysis and Topics
+    - subtasks: describe preliminary results and hypotheses with visual evidence and summary statistics
+- Task 3: Prediction Models finished
+    - subtasks: XGBoost, Logistic Model, Linear Regression, Small Neural Network
+- Task 4: Creation of Github Webpage
+    - subtasks: template selection, graph inclusion, UX of website
+- Task 5: Cleaning code
+    - subtasks: cleaning code & ensuring execution
+- Task 6: Story building Finished
+    - subtasks: story telling, visualizing insights, chart curation
+
+# Contributions
+- Task 1 - Alexandre Reinatt
+- Task 2 - Mikail 
+- Task 2.5 - Maxence
+- Task 3 - Alexandre
+- Task 4 - Maxence
+- Task 5 - Maxence Alexandre Mikail
+- Task 6 - Mikail Alexandre Maxence
 
 # Questions for TAs
 
@@ -94,5 +119,3 @@ results.ipynb contains:
 
 
 Notes : pip requirments -> specifier pip freeze
-
-list : cooperation, eda semntiment and topics
